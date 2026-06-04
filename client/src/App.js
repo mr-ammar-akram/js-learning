@@ -5,7 +5,6 @@ import RegisterForm from './pages/RegisterForm';
 import Homepage from './pages/Homepage';
 import Testpage from './pages/Testpage';
 
-
 function App() {
   return (
     <BrowserRouter>

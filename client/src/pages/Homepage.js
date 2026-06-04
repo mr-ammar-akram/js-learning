@@ -23,7 +23,7 @@ export default function RegisterForm(){
             <section className="hero">
             <div className="overlay">
             <div className="hero-text">
-                <h2>Build Something Amazing</h2>
+                <h2 className='text-3xl font-bold text-blue-600'>Build Something Amazing</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Create modern websites easily.</p>
                 <button>Get Started</button>
             </div>
