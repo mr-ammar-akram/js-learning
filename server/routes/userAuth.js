@@ -1,18 +1,38 @@
 const express = require('express');
 const bcrypt = require("bcrypt");
-const User = require('../models/Users.js'); 
+const pool = require('../models/db_learning'); 
 
 const router = express.Router();
 
 router.post('/register', async (req, res ) => {
     try{
         const {userEmail, userName, userPhone, userPassword} = req.body;
+        
+        const client = await pool.connectDb();
+        try {
+        // creating the user table
+            const tableStatus = await pool.createUserTable();
+            const hashedPass = await bcrypt.hash(userPassword, 10);
+            const query = `
+            INSERT INTO users (userEmail, userName, userPhone, userPassword)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *;
+            `;
+            console.log("Query:", query);
 
-        const hashedPass = await bcrypt.hash(userPassword, 10);
+            const result = await client.query(query, [
+            userEmail,
+            userName,
+            userPhone,
+            hashedPass
+            ]);
 
-        const user = new User({ userEmail, userName, userPhone, userPassword: hashedPass });
-        await user.save();
-        res.json(user);
+            console.log("Inserted User:", result.rows[0]);
+
+            res.json(result.rows[0]);
+        } finally {
+            client.release();
+        }
     }
     catch (err){
         res.status(500).json({ error: err.message });

@@ -1,9 +1,8 @@
 // import logo from './logo.svg';
 // import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import RegisterForm from './pages/RegisterForm';
-import Homepage from './pages/Homepage';
-import Testpage from './pages/Testpage';
+import RegisterForm from './pages/auth/RegisterForm';
+import Homepage from './pages/view/Homepage';
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
         <Route path="/" element={<Navigate to="/homepage" />} />
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/testpage" element={<Testpage />} />
       </Routes>
     </BrowserRouter>
   );
