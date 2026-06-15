@@ -2,6 +2,7 @@
 import { useState } from "react";
 import '../css/RegisterForm.css';
 
+
 export default function RegisterForm() {
     const [formData, setformdata] = useState(
         {
@@ -24,7 +25,7 @@ export default function RegisterForm() {
         e.preventDefault();
         console.log('before hitting API');
         try {
-            const response = await fetch('http://localhost:5000/api/register', {
+            const response = await fetch(`${process.env.BASE_URL}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
