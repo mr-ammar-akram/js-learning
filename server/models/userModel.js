@@ -3,37 +3,72 @@ const pool = require('../models/db_learning');
 const bcrypt = require("bcrypt");
 
 class UserModel {
-    static async    createUserTable(){
+    static async createUserTable(){
         return await pool.createUserTable();
     }
     
-    static async createUser(userEmail, userName, userPhone, userPassword){
-
+    static async createUser(userData){
         const client = await pool.connectDb();
         try{
             await this.createUserTable();
-
-            const hashedPass = await bcrypt.hash(userPassword, 10);
+            const hashedPass = await bcrypt.hash(userData.userPassword, 10);
             const query = `
-                INSERT INTO users (userEmail, userName, userPhone, userPassword)
+                INSERT INTO users (user_email, user_name, user_phone, user_password)
                 VALUES ($1, $2, $3, $4)
                 RETURNING *;
             `;
-            console.log("user data",userEmail, userName, userPhone, hashedPass);
-            console.log("Query:", query);
-            
             const result = await client.query(query, [
-                userEmail,
-                userName,
-                userPhone,
+                userData.userEmail,
+                userData.userName,
+                userData.userPhone,
                 hashedPass
             ]);
-            console.log("Created User:", result.rows[0]);
             return result.rows[0];
+        }
+        catch(error){   
+            return error; 
         }
         finally {
             client.release();
         }
     }
-}   
+
+    static async authenticateUser(userData){
+        const client = await pool.connectDb();
+
+        try{
+            const query = `
+                SELECT * FROM users WHERE user_email = $1 OR user_phone = $1;
+            `;
+            const result = await client.query(query, [userData.user_email]);
+            if(result.rows.length === 0){
+                return {
+                    message: 'Invalid Email Address or Phone',
+                    success: false,
+                };
+            }else{
+                const validPassword = await bcrypt.compare(userData.user_password, result.rows[0].user_password);
+                if(!validPassword){
+                    return {
+                        message: 'Invalid Password',
+                        success: false,
+                    };
+                }else{
+                    //return user without password
+                    delete result.rows[0].user_password;
+                    return {
+                        user: result.rows[0],
+                        success: true,
+                    };
+                }
+            }
+        }
+        catch(error){
+            return error;
+        }
+        finally {
+            client.release();
+        }
+    }
+}           
 module.exports = UserModel;    

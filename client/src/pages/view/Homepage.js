@@ -1,11 +1,36 @@
 
-// import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import '../css/Homepage.css';
 
 export default function RegisterForm(){
+    const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies();
+    const [token, setToken] = useState(null);
+
+    useEffect(() => {
+        //get token value
+        const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith(`token=`))
+        ?.split('=')[1];
+        if (token != null) {
+            setToken(token);
+        }else{
+            navigate('/login');
+        }
+    }, []);
+
+    // logout function
+    const logoutUser = () => {
+        removeCookie('token');
+        navigate('/login');
+    };
+
     return (
 
-        <div>
+        <div className='w-full'>
 
             {/* <!-- NAVBAR --> */}
             <header className="navbar">
@@ -16,7 +41,11 @@ export default function RegisterForm(){
                 <a href="#">Services</a>
                 <a href="#">Contact</a>
             </nav>
-            <a href='/register' className='register-button'>Register</a>
+            {token ? (
+                <span className='register-button' onClick={logoutUser}>Logout</span>
+            ) : (
+                <a href='/register' className='register-button'>Register</a>
+            )}
             </header>
 
             {/* <!-- HERO --> */}

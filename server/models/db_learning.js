@@ -34,13 +34,13 @@ async function createUserTable() {
   const query = `
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
-      userEmail VARCHAR(255) NOT NULL UNIQUE,
-      userName VARCHAR(255) NOT NULL,
-      userPhone VARCHAR(20) NOT NULL,
-      userPassword VARCHAR(255) NOT NULL,
-      isVerified BOOLEAN DEFAULT FALSE,
-      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      user_email VARCHAR(255) NOT NULL UNIQUE,
+      user_name VARCHAR(255) NOT NULL,
+      user_phone VARCHAR(20) NOT NULL UNIQUE,
+      user_password VARCHAR(255) NOT NULL,
+      is_verified BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
 
