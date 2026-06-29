@@ -56,17 +56,17 @@ class UserController {
                     data: response
                 });
             }else{
-                if(response.success ){
-                    return res.status(parseInt(response.code)).json({ 
-                        status_code: response.code,
-                        status: response.severity,
+                if(response.code){
+                    return res.status(400).json({ 
+                        status_code: 400,
+                        status: 'error',
                         message: response.message,
                         data: []
                     });
                 }else{
                     return res.status(401).json({ 
                         status_code: 401,
-                        status: 'Unauthorize',
+                        status: 'unauthorize',
                         message: response.message,
                         data: []
                     });

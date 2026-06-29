@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import NoticeComponents from "../components/noticComponents";
 
 import '../../index.css';
 
@@ -9,6 +10,11 @@ export default function LoginForm() {
     const navigate = useNavigate();
     const [isChecked, setIsChecked] = useState(true);
     const [cookie, setCookie, removeCookie] = useCookies();
+    const [isLoading, setIsLoading] = useState(false);
+    const [notice, setNotice] = useState({
+            type: "",
+            message: ""
+        });
 
     useEffect(() => {
         const token = document.cookie
@@ -38,10 +44,10 @@ export default function LoginForm() {
         const passwordToggle = document.getElementById("passwordToggle");
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
         } else {
             passwordInput.type = "password";
-            passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>`;
+            passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>`;
         }
     };
 
@@ -82,6 +88,7 @@ export default function LoginForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         //make suree fields are not empty
         if (!formData.user_email_phone || !formData.user_password) {
             //Show error message on the emailPhoneError and error_box class with red color
@@ -115,34 +122,64 @@ export default function LoginForm() {
             if (response.ok) {
                 //set token to cookies for session
                 const token = data.data.token;
+                //if checked cookies maxAge = 2h else 15 min
+                const maxAge = isChecked ? 3600 : 7200;
                 setCookie("token", token, {
                     path: "/",
-                    maxAge: 3600,
+                    maxAge: maxAge,
                     secure: true,
                     sameSite: "Lax",
                 });
-                navigate('/homepage');  
+                setNotice({
+                    type: "success",
+                    message: data.message
+                });
+                setTimeout(()=>{
+                    navigate('/homepage');  
+                },2000);
                 }else{
-                alert(data.message);
+                    if(data.status === 'unauthorize'){
+                        setNotice({
+                            type: "error",
+                            message: data.message
+                        });
+                    }
+                    else if(data.status === 'error'){
+                        setNotice({
+                            type: "error",
+                            message: data.message
+                        });
+                    }else if(data.status === 'internal_server_error'){
+                        setNotice({
+                            type: "warning",
+                            message: data.message
+                        });
+                    }
             }    
         } catch (error) {
             console.error("Error logging in:", error);
-            alert("Something went wrong during login.");
+            setNotice({
+                type: "error",
+                message: error.message
+            });
+        } finally{
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="w-full max-w-[420px] my-20">
+        <div className="w-full max-w-[420px] lg:max-w-[750px]  my-20 mx-4">
             <div className="relative bg-[#e0e5ec] rounded-[30px] px-10 py-[50px] transition-all duration-300 shadow-[20px_20px_60px_rgb(190,195,207),-20px_-20px_60px_rgb(255,255,255)]">
                 <div className="text-center mb-10">
                     <div className="w-20 h-20 flex items-center justify-center mx-auto mb-6 rounded-full bg-[#e0e5ec] transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255),inset_0_0_0_rgb(190,195,207),inset_0_0_0_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
                         <div className="w-10 h-10 flex items-center justify-center text-[#6c7293]">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                         </div>
                     </div>
+                    <NoticeComponents notice={notice} setNotice={setNotice} />
                     <h2 className="text-[#3d4468] text-[2rem] font-semibold mb-2">Welcome back</h2>
                     <p className="text-[#9499b7] text-[15px] font-normal">Please sign in to continue</p>
                 </div>
@@ -150,9 +187,9 @@ export default function LoginForm() {
                     <div className="mb-7 relative">
                         <div className="relative bg-[#e0e5ec] rounded-[15px] transition-all duration-300 shadow-[inset_8px_8px_16px_rgb(190,195,207),inset_-8px_-8px_16px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
                             <input id="userEmailPhone" name="user_email_phone" required="" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300"/>
-                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" for="email">Email address / Phone</label>
+                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" htmlFor="email">Email address / Phone</label>
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
@@ -162,16 +199,16 @@ export default function LoginForm() {
                     </div>
                     <div className="mb-7 relative">
                         <div className="relative bg-[#e0e5ec] rounded-[15px] transition-all duration-300 shadow-[inset_8px_8px_16px_rgb(190,195,207),inset_-8px_-8px_16px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
-                            <input  type="password" id="user_password" name="user_password" required="" autocomplete="current-password" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300" />
-                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" for="password">Password</label>
+                            <input  type="password" id="user_password" name="user_password" required="" autoComplete="current-password" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300" />
+                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" htmlFor="password">Password</label>
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
                                 </svg>
                             </div>
                             <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300 password-toggle neu-toggle" onClick={handlePasswordToggle} id="passwordToggle" aria-label="Toggle password visibility">                                
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
                             </button>
                         </div>
                         <span  className="error_box text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="passwordError">Password is required</span>
@@ -179,9 +216,9 @@ export default function LoginForm() {
                     <div className="flex justify-between items-center mb-[35px] flex-wrap gap-4">
                         <div className="remember-wrapper">
                             <input type="checkbox" id="remember" name="remember" onChange={handleCheckboxClick} className="hidden" />
-                            <label for="remember"  className="flex items-center cursor-pointer select-none text-[#6c7293] text-[14px] font-medium gap-3">
+                            <label htmlFor="remember"  className="flex items-center cursor-pointer select-none text-[#6c7293] text-[14px] font-medium gap-3">
                                 <div className="w-[22px] h-[22px] flex items-center justify-center relative bg-[#e0e5ec] rounded-[6px] overflow-hidden transition-all duration-300 shadow-[3px_3px_8px_rgb(190,195,207),-3px_-3px_8px_rgb(255,255,255)]">
-                                    <svg id="checkboxSvg" className="w-3.5 h-3.5 text-[#00c896] opacity-0 scale-0 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <svg id="checkboxSvg" className="w-3.5 h-3.5 text-[#00c896] opacity-0 scale-0 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                                         <polyline points="20 6 9 17 4 12"></polyline>
                                     </svg>
                                 </div>
@@ -191,7 +228,13 @@ export default function LoginForm() {
                         <a href="#" className="text-[#6c7293] text-[14px] font-medium no-underline transition-colors duration-300 hover:text-[#3d4468]">Forgot password?</a>
                     </div>
                     <button type="submit" className="w-full text-[#3d4468] text-[16px] font-semibold cursor-pointer relative mb-7 bg-[#e0e5ec] border-0 rounded-[15px] px-8 py-[18px] overflow-hidden transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
-                        Sign in
+                        {isLoading ? (
+                            <>
+                            <span className="spinner"></span>
+                            </>
+                        ) : (
+                            'Sign In'
+                        )}
                     </button>
                 </form>
                 <div className="flex items-center my-7 gap-4">
@@ -224,7 +267,7 @@ export default function LoginForm() {
                 </div>
                 <div className="hidden text-center opacity-0 translate-y-5 p-10 transition-all duration-500" id="successMessage">
                     <div className="sw-20 h-20 flex items-center justify-center mx-auto mb-5 text-[#00c896] bg-[#e0e5ec] rounded-full transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255),inset_0_0_0_rgb(190,195,207),inset_0_0_0_rgb(255,255,255)]">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>

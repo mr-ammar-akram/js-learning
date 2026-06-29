@@ -1,10 +1,17 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import '../css/RegisterForm.css';
+import NoticeComponents from "../components/noticComponents";
 
 export default function RegisterForm() {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [notice, setNotice] = useState(
+        {
+            type: "",
+            message: ""
+        }
+    );
     const [formData, setformdata] = useState(
         {
             userName: "",
@@ -29,25 +36,39 @@ export default function RegisterForm() {
             [name]: value,
         }));
     };
+
+    //password toggle button icon change
+    const handlePasswordToggle = () => {
+        const passwordInput = document.getElementById("userPassword");
+        const passwordToggle = document.getElementById("passwordToggle");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        } else {
+            passwordInput.type = "password";
+            passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>`;
+        }
+    };
         // when i start typing in input fields, labels moves up slightly and font size should be small
-        const handleFocus = (e) => {
+    const handleFocus = (e) => {
+        const label = e.target.parentElement.querySelector("label");
+        if (label) {
+            label.style.transform = "translateY(-25px)";
+            label.style.fontSize = "12px";
+        }
+    };
+    const handleBlur = (e) => {
+        if (e.target.value === "") {
             const label = e.target.parentElement.querySelector("label");
             if (label) {
-                label.style.transform = "translateY(-25px)";
-                label.style.fontSize = "12px";
+                label.style.transform = "translateY(-50%)";
+                label.style.fontSize = "16px";
             }
-        };
-        const handleBlur = (e) => {
-            if (e.target.value === "") {
-                const label = e.target.parentElement.querySelector("label");
-                if (label) {
-                    label.style.transform = "translateY(-50%)";
-                    label.style.fontSize = "16px";
-                }
-            }
-        };
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         //form validation
         // if (!formData.user_name || !formData.user_mail || !formData.user_password || !formData.user_phone) {
         //     alert("Please fill all the fields");
@@ -63,6 +84,7 @@ export default function RegisterForm() {
             document.getElementById("emailError").style.opacity = "1";
             document.getElementById("emailError").style.translate = "0";
             document.getElementById("emailError").style.borderColor = "red";
+            setIsLoading(false);
             return;
         }
         else{
@@ -75,6 +97,7 @@ export default function RegisterForm() {
             document.getElementById("userNameError").style.opacity = "1";
             document.getElementById("userNameError").style.translate = "0";
             document.getElementById("userNameError").style.outlineColor = "red";
+            setIsLoading(false);
             return;
         }
         else{
@@ -89,6 +112,7 @@ export default function RegisterForm() {
             document.getElementById("phoneError").style.opacity = "1";
             document.getElementById("phoneError").style.translate = "0";
             document.getElementById("phoneError").style.outlineColor = "red";
+            setIsLoading(false);
             return;
         }
         else{
@@ -101,6 +125,7 @@ export default function RegisterForm() {
             document.getElementById("passwordError").style.opacity = "1";
             document.getElementById("passwordError").style.translate = "0";
             document.getElementById("passwordError").style.outlineColor = "red";
+            setIsLoading(false);
             return;
         }
         else{
@@ -113,6 +138,7 @@ export default function RegisterForm() {
                 document.getElementById("passwordError").style.opacity = "1";
                 document.getElementById("passwordError").style.translate = "0";
                 document.getElementById("passwordError").style.outlineColor = "red";
+                setIsLoading(false);
                 return;
             }
             if (!/[0-9]/.test(formData.userPassword)) {
@@ -120,6 +146,7 @@ export default function RegisterForm() {
                 document.getElementById("passwordError").style.opacity = "1";
                 document.getElementById("passwordError").style.translate = "0";
                 document.getElementById("passwordError").style.outlineColor = "red";
+                setIsLoading(false);
                 return;
             }
             if (!/[!@#$%^&*]/.test(formData.userPassword)) {
@@ -127,12 +154,14 @@ export default function RegisterForm() {
                 document.getElementById("passwordError").style.opacity = "1";
                 document.getElementById("passwordError").style.translate = "0";
                 document.getElementById("passwordError").style.outlineColor = "red";
+                setIsLoading(false);
                 return;
             }
             document.getElementById("passwordError").textContent = "Password must contain only letters and numbers and 1 cacpital and 1 special character";
             document.getElementById("passwordError").style.opacity = "1";
             document.getElementById("passwordError").style.translate = "0";
             document.getElementById("passwordError").style.outlineColor = "red";
+            setIsLoading(false);
             return;
         }
         else{
@@ -146,6 +175,7 @@ export default function RegisterForm() {
             document.getElementById("phoneError").style.opacity = "1";
             document.getElementById("phoneError").style.translate = "0";
             document.getElementById("phoneError").style.outlineColor = "red";
+            setIsLoading(false);
             return;
         }else{
             document.getElementById("phoneError").style.opacity = "0";
@@ -166,26 +196,48 @@ export default function RegisterForm() {
             });
             const result = await response.json();
             if (response.ok) {
-                alert(result.message);
-                // clear form after succeessfully submittion
+                setNotice({
+                    type: "success",
+                    message: result.message
+                });
                 setformdata({
                     userName: "",
                     userEmail: "",
                     userPassword: "",
                     userPhone: "",
                 });
-                navigate('/login');
-            }else{
-                alert(result.message);
+                setTimeout(()=>{
+                    navigate('/login');  
+                },2000);
+            }else if(result.status === 'error'){
+                setNotice({
+                    type: "error",
+                    message: result.message
+                });
+            }else if(result.status === 'unauthorize'){
+                setNotice({
+                    type: "error",
+                    message: result.message
+                });
+            }else if(result.status === 'internal_server_error'){
+                setNotice({
+                    type: "warning",
+                    message: result.message
+                });
             }
         } catch (error) {
+            setNotice({
+                type: "warning",
+                message: error.message
+            });
             console.error('Error registering node:', error);
+        } finally{
+            setIsLoading(false);
         }
     }
     return (
-<div>
-        <div className="w-full max-w-[720px] my-20">
-            <div className="relative w-[32rem] bg-[#e0e5ec] rounded-[30px] px-10 py-[50px] transition-all duration-300 shadow-[20px_20px_60px_rgb(190,195,207),-20px_-20px_60px_rgb(255,255,255)]">
+        <div className="w-full max-w-[420px] lg:max-w-[750px]  my-20 mx-4">
+            <div className="relative bg-[#e0e5ec] rounded-[30px] px-10 py-[50px] transition-all duration-300 shadow-[20px_20px_60px_rgb(190,195,207),-20px_-20px_60px_rgb(255,255,255)]">
                 <div className="text-center mb-10">
                     <div className="w-20 h-20 flex items-center justify-center mx-auto mb-6 rounded-full bg-[#e0e5ec] transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255),inset_0_0_0_rgb(190,195,207),inset_0_0_0_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
                         <div className="w-10 h-10 flex items-center justify-center text-[#6c7293]">
@@ -195,6 +247,7 @@ export default function RegisterForm() {
                             </svg>
                         </div>
                     </div>
+                    <NoticeComponents notice={notice} setNotice={setNotice} />
                     <h2 className="text-[#3d4468] text-[2rem] font-semibold mb-2">Create Account</h2>
                     <p className="text-[#9499b7] text-[15px] font-normal">Please create an account to continue</p>
                 </div>
@@ -253,21 +306,20 @@ export default function RegisterForm() {
                                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
                                 </svg>
                             </div>
-                            <button type="button" className="password-toggle neu-toggle" id="passwordToggle" aria-label="Toggle password visibility">
-                                <svg className="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                <svg className="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                                </svg>
-                            </button>
+                            <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300 password-toggle neu-toggle" onClick={handlePasswordToggle} id="passwordToggle" aria-label="Toggle password visibility">                                
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
+                            </button>   
                         </div>
                         <span  className=" text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="passwordError"></span>
                     </div>
                     <button type="submit" className="w-full text-[#3d4468] text-[16px] font-semibold cursor-pointer relative mb-7 bg-[#e0e5ec] border-0 rounded-[15px] px-8 py-[18px] overflow-hidden transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]" onSubmit={handleSubmit}>
-                        Sign up
+                        {isLoading ? (
+                            <>
+                            <span className="spinner"></span>
+                            </>
+                        ) : (
+                            'Sign Up'
+                        )}
                     </button>
                 </form>
                 <div className="flex items-center my-7 gap-4">
@@ -308,17 +360,6 @@ export default function RegisterForm() {
                     <p className="text-[#9499b7] text-[14px]">Redirecting to your dashboard...</p>
                 </div>
             </div>
-        </div>
-        {/* <div className='register-form-wrapper w-full'>
-            <h2>Registeration Form</h2>
-            <form className='register-form' onSubmit={handleSubmit}>
-                <input type='text' name='userName' placeholder='Your Name' className='userName' onChange={handleChange} autoComplete='true' />
-                <input type='email' name='userEmail' placeholder='Your Email' required className='userEmail' onChange={handleChange} autoComplete='true' />
-                <input type='password' name='userPassword' placeholder='Password' className='userPassword' onChange={handleChange} required />
-                <input type='tel' name='userPhone' placeholder='Phone (XXXXXXXXXXX)' className='userPhone' onChange={handleChange} required autoComplete='true' />
-                <button type='submit' className='register-btn'>Register Now</button>
-            </form>
-        </div> */}
         </div>
     );
 }

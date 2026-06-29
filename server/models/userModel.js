@@ -43,7 +43,7 @@ class UserModel {
             const result = await client.query(query, [userData.user_email]);
             if(result.rows.length === 0){
                 return {
-                    message: 'Invalid Email Address or Phone',
+                    message: 'User not Found',
                     success: false,
                 };
             }else{
