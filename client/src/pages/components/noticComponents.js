@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { CheckCircle, XIcon, XCircle, AlertTriangle, InfoIcon } from "lucide-react";
 
 function NoticeComponents(props) {
-    const {type, message} = props.notice;
+    const {type, message, action} = props.notice;
     const setNotice = props.setNotice;
     const [bgcolor, setBgColor] = useState("");
     const [tcolor, setTColor] = useState("");
@@ -46,11 +46,14 @@ function NoticeComponents(props) {
                             {/* <FontAwesomeIcon icon={nIcon} style={{backgroundColor: tcolor}} className={`w-4 h-4 p-1 text-white text-xl rounded-full shadow-[-4px_-4px_8px_#ffffff,4px_4px_8px_#b8b9be]`}/> */}
                             {type === 'success' ? <CheckCircle size={28} color={tcolor} strokeWidth={3} /> : type === 'error' ? <XCircle size={28} color={tcolor} strokeWidth={3} /> : type === 'warning' ? <AlertTriangle size={28} color={tcolor} strokeWidth={3} /> : type === 'info' ? <InfoIcon size={28} color={tcolor} strokeWidth={3} /> : null} 
                         </div>
-                        <span style={{color: tcolor}} className={`font-semibold text-left text-[14px]`}>
-                            {type}: {message}
-                        </span>
+                        <div className=" flex flex-col items-left justify-center ">
+                            <span style={{color: tcolor}} className={`font-semibold text-left text-[14px]`}>
+                                {type}: {message}
+                            </span>
+                            {action ? action : ''}
+                        </div>
                         {/* <FontAwesomeIcon icon={XCircle} style={{color: tcolor, cursor: "pointer"}} onClick={() => { closeNotice(); setNotice({type:"", nIcon:"", message:""}); }} className={`absolute top-[-10px] right-[-10px] p-1 bg-white rounded-full shadow-[-4px_-4px_8px_#ffffff,4px_4px_8px_#b8b9be] cursor-pointer text-lg`}/> */}
-                        <XIcon size={28} color={tcolor} strokeWidth={3} onClick={() => { closeNotice(); setNotice({type:"", nIcon:"", message:""}); }} className="absolute top-[-10px] right-[-10px] p-1 bg-white-100 hover:bg-white/70 rounded-full shadow-[-4px_-4px_8px_#ffffff,4px_4px_8px_#b8b9be] cursor-pointer text-lg"/>
+                        <XIcon style={{ boxShadow:`0 0 0 1px ${tcolor}, -8px -8px 16px #ffffff, 8px 8px 16px #b8b9be`}} size={28} color={tcolor} strokeWidth={3} onClick={() => { closeNotice(); setNotice({type:"", nIcon:"", message:""}); }} className="absolute top-[-10px] right-[-10px] p-1 bg-white-100 hover:bg-white/70 rounded-full cursor-pointer text-lg"/>
                     </div>
             </div>
             )
