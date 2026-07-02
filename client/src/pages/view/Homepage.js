@@ -24,7 +24,7 @@ export default function RegisterForm(){
 
     // logout function
     const logoutUser = () => {
-        removeCookie('token');
+        removeCookie('token',{ path: '/' });
         navigate('/login');
     };
 

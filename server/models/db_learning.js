@@ -36,8 +36,9 @@ async function createUserTable() {
       id SERIAL PRIMARY KEY,
       user_email VARCHAR(255) NOT NULL UNIQUE,
       user_name VARCHAR(255) NOT NULL,
-      user_phone VARCHAR(20) NOT NULL UNIQUE,
+      user_phone VARCHAR(20) UNIQUE,
       user_password VARCHAR(255) NOT NULL,
+      user_role VARCHAR(50) NOT NULL DEFAULT 'user',
       is_verified BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

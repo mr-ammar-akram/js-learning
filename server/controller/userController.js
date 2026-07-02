@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 class UserController {
     static async  registerUser (req, res) {
         const { user_mail, user_name, user_password, user_phone } = req.body;
-
+        console.log(req.body);
         try{
             const result = await UserModel.createUser({
                 'userEmail':user_mail, 

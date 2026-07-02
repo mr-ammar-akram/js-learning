@@ -9,6 +9,7 @@ class UserModel {
     
     static async createUser(userData){
         const client = await pool.connectDb();
+        console.log(userData);
         try{
             await this.createUserTable();
             const hashedPass = await bcrypt.hash(userData.userPassword, 10);
@@ -70,5 +71,6 @@ class UserModel {
             client.release();
         }
     }
+
 }           
 module.exports = UserModel;    

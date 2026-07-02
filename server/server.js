@@ -2,6 +2,7 @@ const express = require("express");
 const pg = require("./models/db_learning");  
 const cors = require("cors");
 const authRoutes = require('./routes/userAuth'); 
+const UserModel = require('./models/userModel');
 require("dotenv").config();
 
 const app = express();
