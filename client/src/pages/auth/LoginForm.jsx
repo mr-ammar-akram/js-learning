@@ -24,7 +24,7 @@ export default function LoginForm() {
         if (token != null) {
             navigate("/homepage");
         }
-    }, []);
+    }, [navigate]);
 
     const [formData, setFormData] = useState({
         user_email_phone:"",

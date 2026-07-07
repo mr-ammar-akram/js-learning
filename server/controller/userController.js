@@ -1,10 +1,10 @@
 const UserModel = require('../models/userModel');
+const notificationController = require('../controller/notificationController');
 const jwt = require("jsonwebtoken");
 
 class UserController {
     static async  registerUser (req, res) {
         const { user_mail, user_name, user_password, user_phone } = req.body;
-        console.log(req.body);
         try{
             const result = await UserModel.createUser({
                 'userEmail':user_mail, 
@@ -12,19 +12,21 @@ class UserController {
                 'userPhone':user_phone,
                 'userPassword':user_password
             });
-            if(result.code){
+            if(result.success){
+                // send email to user
+                const emailResponse = await notificationController.emailVerify(user_mail, user_name);
+                return res.status(200).json({
+                        status_code: 200,
+                        status: 'success',
+                        message: "User created successfully", 
+                        data: result
+                });
+            }else{
                 return res.status(400).json({
                     status_code: 400,
                     status: "error",
                     message: result.message,
                     data: [],
-                });
-            }else{
-                return res.status(200).json({
-                    status_code: 200,
-                    status: 'success',
-                    message: "User created successfully", 
-                    data: result
                 });
             }   
         }catch(err){
@@ -77,6 +79,34 @@ class UserController {
                 status_code: 500,
                 status: 'internal_server_error',
                 message: err.message
+            });
+        }
+    }
+
+    static async  getUser (req, res) {
+        const { user_id } = req.params; 
+        try{
+        const response = await UserModel.getUserByID(user_id);
+            if(response.success){
+                return res.status(200).json({
+                    status_code: 200,
+                    status: 'success',
+                    message: response.message, 
+                    data: response.data
+                });
+            }else{
+                return res.status(400).json({
+                    status_code: 400,
+                    status: 'error',
+                    message: response.message, 
+                    data: []
+                })  
+            }
+        }catch(error){
+            res.status(500).json({
+                status_code: 500,
+                status: 'internal_server_error',
+                message: error.message
             });
         }
     }

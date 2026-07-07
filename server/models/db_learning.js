@@ -22,6 +22,8 @@ async function connectDb() {
     const client = await pool.connect()
     console.log("Connected to database");
     await client.query("SELECT NOW()");
+    console.log("Selected Now()");
+    console.log("connection test successfully");
     return client; 
   } catch (e) {
     console.error("Error connecting to the database:", e);
