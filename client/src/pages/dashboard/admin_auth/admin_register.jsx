@@ -56,51 +56,58 @@ export default function AdminRegister() {
         
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.user_email)) {
-        document.getElementById("emailError").textContent = "Please enter a valid email address";
-        document.getElementById("emailError").style.opacity = "1";
-        document.getElementById("emailError").style.translate = "0";
-        document.getElementById("emailError").style.borderColor = "red";
+        if(!document.getElementById('emailErrorBox')){
+            const emailError = document.createElement("span");
+            emailError.id = "emailErrorBox";
+            emailError.className = "text-red-500 text-sm mt-2";
+            emailError.innerText = "Please enter a valid email address";
+            document.getElementById("emailError").after(emailError);
+        }
         setIsLoading(false);
         return;
     }else {
-        document.getElementById("emailError").style.opacity = "0";
-        document.getElementById("emailError").style.translate = "0";
+        if(document.getElementById('emailErrorBox')){
+            document.getElementById('emailErrorBox').remove();
+        }
     }
     if (!/^[a-zA-Z0-9]+$/.test(formData.user_password)) {
         if (!/[A-Z]/.test(formData.user_password)) {
-            document.getElementById("passwordError").textContent = "Password must contain at least one capital letter";
-            document.getElementById("passwordError").style.opacity = "1";
-            document.getElementById("passwordError").style.translate = "0";
-            document.getElementById("passwordError").style.outlineColor = "red";
+            if(!document.getElementById('passwordErrorBox')){
+                const passwordError = document.createElement("span");
+                passwordError.id = "passwordErrorBox";
+                passwordError.className = "text-red-500 text-sm mt-2";
+                passwordError.innerText = "Password must contain at least one capital letter";
+                document.getElementById("passwordError").after(passwordError);
+            }
             setIsLoading(false);
             return;
         }
         if (!/[0-9]/.test(formData.user_password)) {
-            document.getElementById("passwordError").textContent = "Password must contain at least one number";
-            document.getElementById("passwordError").style.opacity = "1";
-            document.getElementById("passwordError").style.translate = "0";
-            document.getElementById("passwordError").style.outlineColor = "red";
+            if(!document.getElementById('passwordErrorBox')){
+                const passwordError = document.createElement("span");
+                passwordError.id = "passwordErrorBox";
+                passwordError.className = "text-red-500 text-sm mt-2";
+                passwordError.innerText = "Password must contain at least one number";
+                document.getElementById("passwordError").after(passwordError);
+            }
             setIsLoading(false);
             return;
         }
         if (!/[!@#$%^&*]/.test(formData.user_password)) {
-            document.getElementById("passwordError").textContent = "Password must contain at least one special character";
-            document.getElementById("passwordError").style.opacity = "1";
-            document.getElementById("passwordError").style.translate = "0";
-            document.getElementById("passwordError").style.outlineColor = "red";
+            if(!document.getElementById('passwordErrorBox')){
+                const passwordError = document.createElement("span");
+                passwordError.id = "passwordErrorBox";
+                passwordError.className = "text-red-500 text-sm mt-2";
+                passwordError.innerText = "Password must contain at least one special character";
+                document.getElementById("passwordError").after(passwordError);
+            }
             setIsLoading(false);
             return;
         }
-        document.getElementById("passwordError").textContent = "Password must contain only letters and numbers and 1 cacpital and 1 special character";
-        document.getElementById("passwordError").style.opacity = "1";
-        document.getElementById("passwordError").style.translate = "0";
-        document.getElementById("passwordError").style.outlineColor = "red";
-        setIsLoading(false);
-        return;
-    }
-    else{
-        document.getElementById("passwordError").style.opacity = "0";
-        document.getElementById("passwordError").style.translate = "0";
+    } else {
+        if(document.getElementById('passwordErrorBox')){
+            document.getElementById('passwordErrorBox').remove();
+        }
     }
         try{
             const response = await fetch(`${process.env.REACT_APP_HOST_URL}/admin-register`, {
@@ -161,7 +168,7 @@ export default function AdminRegister() {
                   Email Address
                 </label>
 
-                <div className="relative">
+                <div id="emailError" className="relative">
                   <User
                     size={18}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -178,7 +185,6 @@ export default function AdminRegister() {
                   />
                 </div>
             </div>
-            <span className="emailerror text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="emailError">Email address is required</span>
 
             {/* Password */}
             <div className="relative">
@@ -186,7 +192,7 @@ export default function AdminRegister() {
                 Password
               </label>
 
-              <div className="relative">
+              <div id="passwordError" className="relative">
                 <Lock
                   size={18}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -205,7 +211,6 @@ export default function AdminRegister() {
               <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300 password-toggle neu-toggle" onClick={handlePasswordToggle} id="passwordToggle" aria-label="Toggle password visibility">                                
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
               </button>
-            <span  className=" text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="passwordError"></span>
             </div>
             {/* Button */}
             <button

@@ -9,7 +9,6 @@ class UserModel {
     
     static async createUser(userData){
         const client = await pool.connectDb();
-        console.log(userData);
         try{
             await this.createUserTable();
             const hashedPass = await bcrypt.hash(userData.userPassword, 10);
@@ -24,10 +23,18 @@ class UserModel {
                 userData.userPhone,
                 hashedPass
             ]);
-            return result.rows[0];
+            return {
+                success: true,
+                message: 'User created successfully',
+                data: result.rows[0]
+            }
         }
-        catch(error){   
-            return error; 
+        catch(error){
+            return {
+                success: false,
+                message: error.message,
+                data: []
+            }
         }
         finally {
             client.release();
@@ -72,5 +79,57 @@ class UserModel {
         }
     }
 
+    static async getUserByID(userID){
+        const client = await pool.connectDb();
+            try{
+                const query = `SELECT * FROM users WHERE id = $1`;
+                const values = [userID];
+                const result = await client.query(query, values);
+                // 3. Handle the "User Not Found" scenario
+                if (result.rows.length !== 0) {
+                    const user = result.rows[0];
+                    return { 
+                        success: true, 
+                        message: 'User found',
+                        data: user 
+                    };
+                }else{
+                    return { 
+                        success: false, 
+                        message: 'User not found',
+                    };
+                }
+        }catch (err){
+            return err;
+        }finally {
+                client.release();
+        }
+    }
+
+    static async getUserByEmail(user_mail){
+        const client = await pool.connectDb();
+        try{
+            const query = `SELECT * FROM users WHERE user_email = $1`;
+            const values = [user_mail];
+            const result = await client.query(query, values);
+            if(result.rows.length !== 0){
+                const user = result.rows[0];
+                return { 
+                    success: true, 
+                    message: 'User found',
+                    data: user 
+                };
+            }else{
+                return { 
+                    success: false, 
+                    message: 'User not found',
+                };
+            }
+        }catch(err){
+            return err;
+        }finally{
+            client.release();
+        }
+    }
 }           
 module.exports = UserModel;    

@@ -1,0 +1,63 @@
+.email-wrapper{
+    background-color: rgb(232, 232, 232);
+    height: 100vh;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.email-message-box{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.email-header{
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+}
+.otp-verification-code{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.otp-verification-code input    {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+.otp-verification-code input:focus{
+    border-color: #000;
+}
+.email-content{
+    font-size: 16px;
+    color: #000;
+    text-align: center; 
+}
+hr{
+    width: 80%;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+.email-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

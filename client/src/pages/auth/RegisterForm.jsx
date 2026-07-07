@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NoticeComponents from "../components/noticComponents";
+import EmailVerify from "../dashboard/emails/EmailVerify";
 
 export default function RegisterForm() {
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function RegisterForm() {
         if(token){
             navigate('/homepage');
         }
-    }, []);
+    }, [navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -69,13 +70,6 @@ export default function RegisterForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        //form validation
-        // if (!formData.user_name || !formData.user_mail || !formData.user_password || !formData.user_phone) {
-        //     alert("Please fill all the fields");
-        //     return;
-        // }
-
-
 
         //email format validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -209,19 +203,9 @@ export default function RegisterForm() {
                 setTimeout(()=>{
                     navigate('/login');  
                 },2000);
-            }else if(result.status === 'error'){
+            }else {
                 setNotice({
-                    type: "error",
-                    message: result.message
-                });
-            }else if(result.status === 'unauthorize'){
-                setNotice({
-                    type: "error",
-                    message: result.message
-                });
-            }else if(result.status === 'internal_server_error'){
-                setNotice({
-                    type: "warning",
+                    type: result.status === 'unauthorize' || result.status === 'error' ? 'error' : 'warning', 
                     message: result.message
                 });
             }

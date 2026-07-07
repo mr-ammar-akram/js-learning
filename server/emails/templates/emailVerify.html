@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Verification Email</title>
+    <style>
+        #mail{
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body style="margin:0;padding:0;background-color:#e8e8e8;font-family:Arial,Helvetica,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e8e8e8;">
+    <tr>
+        <td align="center" style="padding:40px 20px;">
+
+            <!-- Main Container -->
+            <table width="600" cellpadding="0" cellspacing="0" border="0"
+                style="background:#ffffff;border-radius:10px;">
+
+                <!-- Logo -->
+                <tr>
+                    <td align="center" style="padding:25px 20px 10px;">
+                        <span style="font-size:28px;font-weight:bold;color:#000000;">
+                            Website Logo
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- Heading -->
+                <tr>
+                    <td align="center" style="padding:10px 30px;">
+                        <h1 style="margin:0;color:#0066ff;font-size:26px;font-weight:bold;">
+                            Verify your sign-up
+                        </h1>
+                    </td>
+                </tr>
+
+                <!-- Message -->
+                <tr>
+                    <td align="center" style="padding:0 30px;">
+                        <h2 style="margin:0;font-size:18px;line-height:24px;color:#333333;">Hi, {{userName}}.<br/></h2>
+                        <p style="margin:0;font-size:16px;line-height:24px;color:#333333;">
+                            We have received a sign-up attempt with the following code.
+                            Please enter it in the browser window where you started
+                            signing up.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- OTP -->
+                <tr>
+                    <td align="center" style="padding:30px;">
+
+                        <table cellpadding="0" cellspacing="8" border="0">
+                            <tr>
+                                <td style="width:270px;height:45px;border:1px solid #cccccc;border-radius:5px;font-size:22px;font-weight:bold;text-align:center;">
+                                    {{otp}}
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+
+                <!-- Footer Message -->
+                <tr>
+                    <td align="center" style="padding:0 30px 20px;">
+                        <p style="margin:0;font-size:16px;line-height:24px;color:#333333;">
+                            If you did not attempt to sign up but received this email,
+                            please disregard it. This code will remain active for
+                            <strong>10 minutes</strong>.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Divider -->
+                <tr>
+                    <td align="center">
+                        <hr style="border:none;border-top:1px solid #dddddd;width:80%;">
+                    </td>
+                </tr>
+
+                <!-- Copyright -->
+                <tr>
+                    <td align="center" style="padding:20px;">
+                        <p style="margin:0;font-size:14px;color:#777777;">
+                            © 2026 All rights reserved.
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

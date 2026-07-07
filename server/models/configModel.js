@@ -2,14 +2,13 @@
 const pool = require('../models/db_learning'); 
 const bcrypt = require("bcrypt");
 
-class ConfigController {
+class ConfigModel {
     static async createUserTable(){
         return await pool.createUserTable();
     }
 
     static async  createConfig(userData){
         const client = await pool.connectDb();
-        console.log(userData);
         try{
             await this.createUserTable();
 
@@ -83,4 +82,4 @@ class ConfigController {
     }
 
 }           
-module.exports = ConfigController;    
+module.exports = ConfigModel;    

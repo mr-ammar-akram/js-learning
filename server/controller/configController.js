@@ -1,5 +1,4 @@
 const ConfigModel = require('../models/configModel');
-const jwt = require("jsonwebtoken");
 
 class ConfigController {
     static async  adminRegister (req, res) {

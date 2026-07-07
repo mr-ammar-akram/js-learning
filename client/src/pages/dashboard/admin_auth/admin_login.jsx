@@ -10,7 +10,7 @@ import '../../../index.css';
 export default function AdminLogin() {
 
         const navigate = useNavigate();
-        const [isChecked, setIsChecked] = useState(true);
+        const [checked, setChecked] = useState(false);
         const [cookie, setCookie, removeCookie] = useCookies();
         const [isLoading, setIsLoading] = useState(false);
         const [notice, setNotice] = useState({
@@ -24,7 +24,7 @@ export default function AdminLogin() {
             .find(row => row.startsWith(`token=`))
             ?.split('=')[1];
             if (token != null) {
-                navigate("/ds-admin/login");
+                navigate("/admin/dashboard");
             }
         }, []);
     
@@ -40,6 +40,9 @@ export default function AdminLogin() {
                 [name]: value,
             }));
         };
+        const handleChecked = () => {
+            setChecked(!checked);
+        }
         //password toggle button icon change
         const handlePasswordToggle = () => {
             const passwordInput = document.getElementById("admin_password");
@@ -56,32 +59,44 @@ export default function AdminLogin() {
         const handleSubmit = async (e) => {
             e.preventDefault();
             setIsLoading(true);
-            //make suree fields are not empty
-            if (!formData.user_email_phone || !formData.user_password) {
-                //Show error message on the emailPhoneError and error_box class with red color
-                document.getElementsByClassName("emailPhoneError")[0].style.opacity = "1";
-                document.getElementsByClassName("emailPhoneError")[0].style.transform = "translateY(-25px)";
-                document.getElementsByClassName("error_box")[0].style.opacity = "1";
-                document.getElementsByClassName("error_box")[0].style.transform = "translateY(-25px)";
+            // email validation
+            if (!formData.user_email_phone) {
+              if(!document.getElementById("emailErrorBox")){
+                const errorDiv = document.createElement("span");
+                errorDiv.className = "text-red-500 text-sm";
+                errorDiv.id = "emailErrorBox";
+                errorDiv.textContent = "Please enter your email or phone number";
+                document.getElementById("emailError").after(errorDiv);
+              }
                 return;
             }else{
-                //remove the error message on the emailPhoneError and error_box class with red color
-                document.getElementsByClassName("emailPhoneError")[0].style.opacity = "0";
-                document.getElementsByClassName("emailPhoneError")[0].style.transform = "translateY(0)";
-                document.getElementsByClassName("error_box")[0].style.opacity = "0";
-                document.getElementsByClassName("error_box")[0].style.transform = "translateY(0)";
+              if(document.getElementById("emailErrorBox")){
+                document.getElementById("emailErrorBox").remove();
+              }
             }
-    
+            //password validation
+            if (!formData.user_password) {
+              if(!document.getElementById("passwordErrorBox")){
+                const errorDiv = document.createElement("span");
+                errorDiv.className = "text-red-500 text-sm";
+                errorDiv.id = "passwordErrorBox";
+                errorDiv.textContent = "Please enter your password";
+                document.getElementById("passwordError").after(errorDiv);
+              }
+                return;
+            }else{
+              if(document.getElementById("passwordErrorBox")){
+                document.getElementById("passwordErrorBox").remove();
+              }
+            }
+            
             try {
                 const response = await fetch(`${process.env.REACT_APP_HOST_URL}/login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        user_email_phone: formData.user_email_phone,
-                        user_password: formData.user_password,
-                    }),
+                    body: JSON.stringify(formData),
                 });
     
                 const data = await response.json();
@@ -89,8 +104,8 @@ export default function AdminLogin() {
                 if (response.ok) {
                     //set token to cookies for session
                     const token = data.data.token;
-                    //if checked cookies maxAge = 2h else 15 min
-                    const maxAge = isChecked ? 3600 : 7200;
+                    //if checked cookies maxAge = 1h else 2h
+                    const maxAge = checked ? 3600 : 7200;
                     setCookie("token", token, {
                         path: "/",
                         maxAge: maxAge,
@@ -105,23 +120,10 @@ export default function AdminLogin() {
                         navigate('/admin/dashboard');
                     },2000);
                     }else{
-                        if(data.status === 'unauthorize'){
-                            setNotice({
-                                type: "error",
-                                message: data.message
-                            });
-                        }
-                        else if(data.status === 'error'){
-                            setNotice({
-                                type: "error",
-                                message: data.message
-                            });
-                        }else if(data.status === 'internal_server_error'){
-                            setNotice({
-                                type: "warning",
-                                message: data.message
-                            });
-                        }
+                      setNotice({
+                        type: data.status === 'unauthorize' || data.status === 'error' ? 'error' : 'warning', 
+                        message: data.message
+                      });
                 }    
             } catch (error) {
                 console.error("Error logging in:", error);
@@ -159,7 +161,7 @@ export default function AdminLogin() {
               Email Address
             </label>
 
-            <div className="relative">
+            <div id="emailError" className="relative">
               <Mail
                 size={18}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -176,7 +178,6 @@ export default function AdminLogin() {
               />
             </div>
           </div>
-          <span className="emailPhoneError text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300">Email address/Phone is required</span>
 
           {/* Password */}
           <div className="relative">
@@ -184,7 +185,7 @@ export default function AdminLogin() {
               Password
             </label>
 
-            <div className="relative">
+            <div id="passwordError" className="relative">
               <Lock
                 size={18}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -205,12 +206,11 @@ export default function AdminLogin() {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
             </button>
           </div>
-          <span  className="error_box text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="passwordError">Password is required</span>
           
           {/* Remember */}
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" />
+              <input onClick={handleChecked} type="checkbox" />
               Remember Me
             </label>
 

@@ -20,7 +20,7 @@ export default function RegisterForm(){
         }else{
             navigate('/login');
         }
-    }, []);
+    }, [navigate]);
 
     // logout function
     const logoutUser = () => {
