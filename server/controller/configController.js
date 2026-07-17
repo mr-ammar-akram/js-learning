@@ -1,16 +1,10 @@
 const ConfigModel = require('../models/configModel');
+const notificationController = require('../controller/notificationController');
 
 class ConfigController {
     static async  adminRegister (req, res) {
-        const { user_email, user_name, user_role, user_password } = req.body;
         try{
-            const result = await ConfigModel.createConfig({
-                'userEmail':user_email, 
-                'userName': user_name, 
-                'userRole':user_role,
-                'userPassword':user_password,
-                'is_verified':true
-            });
+            const result = await ConfigModel.createConfig(req.body);
             if(result.code){
                 return res.status(400).json({
                     status_code: 400,
@@ -19,6 +13,12 @@ class ConfigController {
                     data: [],
                 });
             }else{
+                let notificationResponse;
+                if(result.user_phone){
+                    notificationResponse = await notificationController.registerByAdminMail(result.user_email, result.user_name, result.id, req.body.user_password, result.user_role);
+                } 
+                delete result.user_password;
+                result.mail_response = notificationResponse;
                 return res.status(200).json({
                     status_code: 200,
                     status: 'success',
@@ -47,7 +47,7 @@ class ConfigController {
                 });
             } else {
                 return res.status(404).json({
-                    exists: false,
+                    exists: false,  
                     message: response.message,
                 });
             }
@@ -57,7 +57,6 @@ class ConfigController {
             });
         }
     }
-
 }
 
 module.exports = ConfigController;

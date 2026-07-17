@@ -15,7 +15,7 @@ class NotificationService {
         const info = await transporter.sendMail(mailOptions);
         return {
             success: true,
-            messageID: info.messageId
+            messageID: info.messageId   
         }
         }catch(error){
             return {
