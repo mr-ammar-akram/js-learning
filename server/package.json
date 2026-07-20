@@ -4,23 +4,28 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch server.js",
+    "migrate": "node-pg-migrate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "handlebars": "^4.7.9",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.1",
+    "multer": "^2.2.0",
     "mysql2": "^3.22.5",
+    "nodemailer": "^9.0.3",
     "pg": "^8.21.0"
   },
   "devDependencies": {
     "dotenv": "^16.0.1",
+    "node-pg-migrate": "^8.0.4",
     "nodemon": "^3.1.14"
   }
 }

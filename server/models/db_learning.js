@@ -20,10 +20,7 @@ pool.on('error', (err) => {
 async function connectDb() {
   try {
     const client = await pool.connect()
-    console.log("Connected to database");
     await client.query("SELECT NOW()");
-    console.log("Selected Now()");
-    console.log("connection test successfully");
     return client; 
   } catch (e) {
     console.error("Error connecting to the database:", e);
@@ -31,31 +28,4 @@ async function connectDb() {
   }
 }
 
-// create user table
-async function createUserTable() {
-  const query = `
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      user_email VARCHAR(255) NOT NULL UNIQUE,
-      user_name VARCHAR(255) NOT NULL,
-      user_phone VARCHAR(20) UNIQUE,
-      user_password VARCHAR(255) NOT NULL,
-      user_role VARCHAR(50) NOT NULL DEFAULT 'user',
-      is_verified BOOLEAN DEFAULT FALSE,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `;
-
-  const client = await pool.connect();
-
-  try {
-    const result = await client.query(query);
-    console.log("User table created successfully");
-    return result;
-  } finally {
-    client.release(); 
-  }
-}
-
-module.exports = { pool, connectDb, createUserTable };
+module.exports = { pool, connectDb };

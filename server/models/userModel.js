@@ -3,26 +3,25 @@ const pool = require('../models/db_learning');
 const bcrypt = require("bcrypt");
 
 class UserModel {
-    static async createUserTable(){
-        return await pool.createUserTable();
-    }
     
     static async createUser(userData){
         const client = await pool.connectDb();
         try{
-            await this.createUserTable();
             const hashedPass = await bcrypt.hash(userData.userPassword, 10);
             const query = `
-                INSERT INTO users (user_email, user_name, user_phone, user_password)
-                VALUES ($1, $2, $3, $4)
+                INSERT INTO users (user_email, full_name, user_name, user_phone, user_password)
+                VALUES ($1, $2, $3, $4, $5)
                 RETURNING *;
             `;
             const result = await client.query(query, [
                 userData.userEmail,
+                userData.userFullName,
                 userData.userName,
                 userData.userPhone,
                 hashedPass
             ]);
+            //remove password field from response
+            delete result.rows[0].user_password;
             return {
                 success: true,
                 message: 'User created successfully',
@@ -62,6 +61,15 @@ class UserModel {
                         success: false,
                     };
                 }else{
+                    if(result.rows[0].is_verified === false){
+                        delete result.rows[0].user_password;
+                        return {
+                            message: 'User not verified',
+                            status: 'not_verified',
+                            success: false,
+                            user: result.rows[0]
+                        };
+                    }
                     //return user without password
                     delete result.rows[0].user_password;
                     return {
@@ -79,7 +87,34 @@ class UserModel {
         }
     }
 
-    static async getUserByID(userID){
+    static async updateStatus(user_id, status){
+        const client = await pool.connectDb();
+        try{
+            const query = `UPDATE users SET is_verified = $1 WHERE id = $2 RETURNING *`;
+            const values = [status, user_id];
+            const result = await client.query(query, values);
+            if(result.rows.length === 0){
+                return {
+                    success: false,
+                    message: 'User not found',
+                    data: []
+                }
+            }   
+            //return user without password
+            delete result.rows[0].user_password;    
+            return {
+                success: true,
+                message: 'Status updated successfully',
+                data: result.rows[0]
+            }
+        }catch (err){
+            return err;
+        }finally {
+                client.release();
+        }
+    }
+
+  static async getUserByID(userID){
         const client = await pool.connectDb();
             try{
                 const query = `SELECT * FROM users WHERE id = $1`;
@@ -87,12 +122,20 @@ class UserModel {
                 const result = await client.query(query, values);
                 // 3. Handle the "User Not Found" scenario
                 if (result.rows.length !== 0) {
+                    const profileQuery = `SELECT * FROM attachments WHERE id = $1`;
+                    const profileValue = [result.rows[0].attachment_id];
+                    const profileResult = await client.query(profileQuery, profileValue);
                     const user = result.rows[0];
+                    if(profileResult.rows.length !== 0){
+                        user.profile_image = profileResult.rows[0].file_url;
+                    }
+                    delete user.user_password;
                     return { 
                         success: true, 
                         message: 'User found',
                         data: user 
                     };
+
                 }else{
                     return { 
                         success: false, 
@@ -128,6 +171,32 @@ class UserModel {
         }catch(err){
             return err;
         }finally{
+            client.release();
+        }
+    }
+
+    static async getAllUsers() {
+        const client = await pool.connectDb();
+        try {
+            const query = `SELECT * FROM users`;
+            const result = await client.query(query);
+            if (result.rows.length !== 0) {
+                const users = result.rows;
+                return { 
+                    success: true, 
+                    message: 'Users found',
+                    data: users 
+                };
+            } else {
+                return { 
+                    success: false, 
+                    message: 'Users not found',
+                    data: [] 
+                };
+            }
+        } catch (err) {
+            return err;
+        } finally {
             client.release();
         }
     }
