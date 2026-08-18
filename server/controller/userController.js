@@ -9,7 +9,7 @@ class UserController {
         try{
             const result = await UserModel.createUser({
                 'userEmail':user_mail, 
-                'userFullName': user_full_name, 
+                'userFullName': user_full_name,
                 'userName': user_name, 
                 'userPhone':user_phone,
                 'userPassword':user_password
@@ -193,6 +193,62 @@ class UserController {
     static async  getAllUsers (req, res) {
         try{
         const response = await UserModel.getAllUsers();
+            if(response.success){
+                return res.status(200).json({
+                    status_code: 200,
+                    status: 'success',
+                    message: response.message, 
+                    data: response.data
+                });
+            }else{
+                return res.status(400).json({
+                    status_code: 400,
+                    status: 'error',
+                    message: response.message, 
+                    data: []
+                })  
+            }
+        }catch(error){
+            res.status(500).json({
+                status_code: 500,
+                status: 'internal_server_error',
+                message: error.message
+            });
+        }
+    }
+
+    static async deleteUser (req, res) {
+        const { id } = req.params; 
+        try{
+            const response = await UserModel.deleteUserByID(id);
+            if(response.success){
+                return res.status(200).json({
+                    status_code: 200,
+                    status: 'success',
+                    message: response.message, 
+                    data: response.data
+                });
+            }else{
+                return res.status(400).json({
+                    status_code: 400,
+                    status: 'error',
+                    message: response.message, 
+                    data: []
+                })  
+            }
+        }catch(error){
+            res.status(500).json({
+                status_code: 500,
+                status: 'internal_server_error',
+                message: error.message
+            });
+        }
+    }
+
+    static async updateUser (req, res){
+        const { id } = req.params; 
+        try{
+            const response = await UserModel.updateUserByID(id, req.body);
             if(response.success){
                 return res.status(200).json({
                     status_code: 200,

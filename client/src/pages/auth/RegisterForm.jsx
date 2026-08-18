@@ -1,11 +1,12 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import NoticeComponents from "../components/noticComponents";
-import EmailVerify from "../dashboard/emails/EmailVerify";
 
 export default function RegisterForm() {
     const navigate = useNavigate();
+    const [cookies, setCookie] = useCookies();
     const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState(
         {
@@ -16,6 +17,7 @@ export default function RegisterForm() {
     const [formData, setformdata] = useState(
         {
             userName: "",
+            userFullName: "",
             userEmail: "",
             userPassword: "",
             userPhone: "",
@@ -30,14 +32,32 @@ export default function RegisterForm() {
         }
     }, [navigate]);
 
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setformdata((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setformdata((prev) => ({
-            ...prev,
+        if(name === "userEmail"){
+          const username = value.split("@")[0];
+          setformdata({
+            ...formData,
+            userName: username,
             [name]: value,
-        }));
-    };
+          });
+        }
+        else {
+          setformdata({
+              ...formData,
+              [name]: value
+          });
+        }
 
+    };
     //password toggle button icon change
     const handlePasswordToggle = () => {
         const passwordInput = document.getElementById("userPassword");
@@ -85,18 +105,18 @@ export default function RegisterForm() {
             document.getElementById("emailError").style.opacity = "0";
             document.getElementById("emailError").style.translate = "0";
         }
-        //username length
-        if (formData.userName.length < 5) {
-            document.getElementById("userNameError").textContent = "Username must be at least 5 characters long";
-            document.getElementById("userNameError").style.opacity = "1";
-            document.getElementById("userNameError").style.translate = "0";
-            document.getElementById("userNameError").style.outlineColor = "red";
+        //Full Name length
+        if (formData.userFullName.length < 5) {
+            document.getElementById("userFullNameError").textContent = "Full Name must be at least 5 characters long";
+            document.getElementById("userFullNameError").style.opacity = "1";
+            document.getElementById("userFullNameError").style.translate = "0";
+            document.getElementById("userFullNameError").style.outlineColor = "red";
             setIsLoading(false);
             return;
         }
         else{
-            document.getElementById("userNameError").style.opacity = "0";
-            document.getElementById("userNameError").style.translate = "0";
+            document.getElementById("userFullNameError").style.opacity = "0";
+            document.getElementById("userFullNameError").style.translate = "0";
         }
 
         //phone format validation
@@ -183,6 +203,7 @@ export default function RegisterForm() {
                 },
                 body: JSON.stringify({
                     user_name: formData.userName,
+                    user_full_name: formData.userFullName,
                     user_mail: formData.userEmail,
                     user_password: formData.userPassword,
                     user_phone: formData.userPhone
@@ -196,12 +217,26 @@ export default function RegisterForm() {
                 });
                 setformdata({
                     userName: "",
+                    userFullName: "",
                     userEmail: "",
                     userPassword: "",
                     userPhone: "",
                 });
+                setCookie("otp_token", result.data.otp_verification.data.expired_at, {
+                    path: "/",
+                    maxAge: 60 * 60 * 24, // 24 hours
+                    secure: true,
+                    sameSite: "Lax",
+                });
                 setTimeout(()=>{
-                    navigate('/login');  
+                    navigate('/verify-otp' , {
+                        state: {
+                            user_id: result.data.id,
+                            user_email: result.data.user_email,
+                            user_name: result.data.user_name,
+                            token: result.data.token ? result.data.token : ""
+                        }
+                    });  
                 },2000);
             }else {
                 setNotice({
@@ -214,7 +249,6 @@ export default function RegisterForm() {
                 type: "warning",
                 message: error.message
             });
-            console.error('Error registering node:', error);
         } finally{
             setIsLoading(false);
         }
@@ -225,24 +259,24 @@ export default function RegisterForm() {
                 <div className="text-center mb-10">
                     <div className="w-20 h-20 flex items-center justify-center mx-auto mb-6 rounded-full bg-[#e0e5ec] transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255),inset_0_0_0_rgb(190,195,207),inset_0_0_0_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
                         <div className="w-10 h-10 flex items-center justify-center text-[#6c7293]">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                         </div>
                     </div>
                     <NoticeComponents notice={notice} setNotice={setNotice} />
-                    <h2 className="text-[#3d4468] text-[2rem] font-semibold mb-2">Create Account</h2>
+                    <h2 className="text-[#3d4468] text   mb-2">Create Account</h2>
                     <p className="text-[#9499b7] text-[15px] font-normal">Please create an account to continue</p>
                 </div>
                 <form className="register-form" onSubmit={handleSubmit}>
                     {/* //Email input box */}
                     <div className="mb-7 relative">
                         <div className="relative bg-[#e0e5ec] rounded-[15px] transition-all duration-300 shadow-[inset_8px_8px_16px_rgb(190,195,207),inset_-8px_-8px_16px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset] ">
-                            <input type="text" id="userEmail" name="userEmail" required="" autocomplete="email" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300" />
+                            <input type="text" id="userEmail" name="userEmail" required="" autoComplete="email" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300" />
                             <label htmlFor="userEmail" className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" >Email address</label>
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                                     <polyline points="22,6 12,13 2,6"></polyline>
                                 </svg>
@@ -251,27 +285,27 @@ export default function RegisterForm() {
                         <span className="emailerror text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="emailError">Email address is required</span>
                     </div>
 
-                    {/* //Username input box */}
+                    {/* Full Name input box */}
                     <div className="mb-7 relative">
                         <div className="relative bg-[#e0e5ec] rounded-[15px] transition-all duration-300 shadow-[inset_8px_8px_16px_rgb(190,195,207),inset_-8px_-8px_16px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
-                            <input type="text" id="userName" name="userName" required="" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300" />
-                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" for="userName" >Username</label>
+                            <input type="text" id="userFullName" name="userFullName" required="" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300" />
+                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" htmlFor="userFullName" >Full Name</label>
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                             </div>
                         </div>
-                        <span className="usererror text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="userNameError">Username is required</span>
+                        <span className="usererror text-[#ff3b5c] text-[12px] font-medium mt-2 ml-5 opacity-0 -translate-y-2.5 transition-all duration-300" id="userFullNameError">Full Name is required</span>
                     </div>
                     {/* Phone Number input box */}
                     <div className="mb-7 relative">
                         <div className="relative bg-[#e0e5ec] rounded-[15px] transition-all duration-300 shadow-[inset_8px_8px_16px_rgb(190,195,207),inset_-8px_-8px_16px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
-                            <input  type="text" id="userPhone" name="userPhone" required="" autocomplete="phone" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300"/>
-                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" for="userPhone">Phone Number</label>
+                            <input  type="text" id="userPhone" name="userPhone" required="" autoComplete="phone" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300"/>
+                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" htmlFor="userPhone">Phone Number</label>
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6.06-6.06 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 3.08 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-.85a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                 </svg>
                             </div>
@@ -282,10 +316,10 @@ export default function RegisterForm() {
                     {/* Password input box */}
                     <div className="mb-7 relative">
                         <div className="relative bg-[#e0e5ec] rounded-[15px] transition-all duration-300 shadow-[inset_8px_8px_16px_rgb(190,195,207),inset_-8px_-8px_16px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
-                            <input  type="password" id="userPassword" name="userPassword" required="" autocomplete="current-password" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur}  className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300"/>
-                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" for="password">Password</label>
+                            <input  type="password" id="userPassword" name="userPassword" required="" autoComplete="current-password" placeholder=" " onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur}  className="w-full bg-transparent border-0 outline-none text-[#3d4468] text-[16px] font-medium py-5 pl-[55px] pr-6 transition-all duration-300"/>
+                            <label className="absolute left-[55px] top-1/2 -translate-y-1/2 text-[#9499b7] text-[16px] font-normal pointer-events-none transition-all duration-300" htmlFor="password">Password</label>
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
                                 </svg>
@@ -336,7 +370,7 @@ export default function RegisterForm() {
                 </div>
                 <div className="hidden text-center opacity-0 translate-y-5 p-10 transition-all duration-500" id="successMessage">
                     <div className="sw-20 h-20 flex items-center justify-center mx-auto mb-5 text-[#00c896] bg-[#e0e5ec] rounded-full transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255),inset_0_0_0_rgb(190,195,207),inset_0_0_0_rgb(255,255,255)]">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>

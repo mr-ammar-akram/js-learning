@@ -51,6 +51,7 @@ class ProfileModel {
                 client.release();
         }
     }
+
     static async getProfileImage(user_id){
         const client = await pool.connectDb();
         try{
@@ -85,5 +86,35 @@ class ProfileModel {
                 client.release();
         }
     }
+
+    static async addCategoryImage(file){
+        const client = await pool.connectDb();
+        try{
+            const query = "INSERT INTO attachments (file_name, file_type, file_size, file_url) VALUES ($1, $2, $3, $4) RETURNING *"
+            const value = [file.originalname, file.mimetype, file.size, file.path];
+            const result = await client.query(query, value);
+            if(result.rows.length !== 0){
+                return {
+                    success: true,
+                    message: 'Image uploaded successfully',
+                    data: result.rows[0].id
+                }
+            }
+            return {
+                success: false,
+                message: 'Image not uploaded',
+                data: []
+            }
+        }catch (err){
+            return {
+                success: false,
+                message: err.message,
+                data: []
+            }
+        }finally {
+                client.release();
+        }
+    }
+    
 }
 module.exports = ProfileModel;

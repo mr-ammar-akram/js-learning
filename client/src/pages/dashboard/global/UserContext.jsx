@@ -21,9 +21,32 @@ export function UserProvider({ children }) {
             setLoading(false);
         }
     };
+    const getProfileImage = async (userId) => {
+        try{
+            const res = await fetch(`${process.env.REACT_APP_HOST_URL}/admin/profile/image`,{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                },
+                body:JSON.stringify({
+                    user_id:userId
+                })
+            });
+            if (!res.ok) {
+                throw new Error('Image not found');
+            }
+            const data = await res.json();
+            return data;
+        }catch(error){
+            setError(error.message);
+            return null;
+        }finally{
+            setLoading(false);
+        }
+    };
     return (
     <>
-    <UserContext.Provider value={{ getProfileData, loading, error }}>
+    <UserContext.Provider value={{ getProfileData, getProfileImage, loading, error }}>
       {children}
     </UserContext.Provider>
     </>

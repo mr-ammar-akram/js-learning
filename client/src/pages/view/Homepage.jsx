@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { Header } from "./layout/Header";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import '../css/Homepage.css';
@@ -33,20 +34,7 @@ export default function RegisterForm(){
         <div className='w-full'>
 
             {/* <!-- NAVBAR --> */}
-            <header className="navbar">
-            <h1>MyBrand</h1>
-            <nav className="nav-links">
-                <a href="/homepage">Home</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Contact</a>
-            </nav>
-            {token ? (
-                <span className='register-button' onClick={logoutUser}>Logout</span>
-            ) : (
-                <a href='/register' className='register-button'>Register</a>
-            )}
-            </header>
+            <Header />
 
             {/* <!-- HERO --> */}
             <section className="hero">

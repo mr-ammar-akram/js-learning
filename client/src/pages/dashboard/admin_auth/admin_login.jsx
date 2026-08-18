@@ -9,138 +9,137 @@ import '../../../index.css';
 
 export default function AdminLogin() {
 
-        const navigate = useNavigate();
-        const [checked, setChecked] = useState(false);
-        const [cookie, setCookie, removeCookie] = useCookies();
-        const [isLoading, setIsLoading] = useState(false);
-        const [notice, setNotice] = useState({
-                type: "",
-                message: ""
-            });
-    
-        useEffect(() => {
-            const token = document.cookie
-            .split('; ')
-            .find(row => row.startsWith(`token=`))
-            ?.split('=')[1];
-            if (token != null) {
-                navigate("/admin/dashboard");
-            }
-        }, []);
-    
-        const [formData, setFormData] = useState({
-            user_email_phone:"",
-            user_password: "",
+  const navigate = useNavigate();
+  const [checked, setChecked] = useState(false);
+  const [cookie, setCookie, removeCookie] = useCookies();
+  const [isLoading, setIsLoading] = useState(false);
+  const [notice, setNotice] = useState({
+    type: "",
+    message: ""
+  });
+
+  useEffect(() => {
+    const token = document.cookie
+      .split('; ')
+      .find(row => row.startsWith(`token=`))
+      ?.split('=')[1];
+    if (token != null) {
+      navigate("/admin/dashboard");
+    }
+  }, []);
+
+  const [formData, setFormData] = useState({
+    user_email_phone: "",
+    user_password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleChecked = () => {
+    setChecked(!checked);
+  }
+  //password toggle button icon change
+  const handlePasswordToggle = () => {
+    const passwordInput = document.getElementById("admin_password");
+    const passwordToggle = document.getElementById("passwordToggle");
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    } else {
+      passwordInput.type = "password";
+      passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>`;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // email validation
+    if (!formData.user_email_phone) {
+      if (!document.getElementById("emailErrorBox")) {
+        const errorDiv = document.createElement("span");
+        errorDiv.className = "text-red-500 text-sm";
+        errorDiv.id = "emailErrorBox";
+        errorDiv.textContent = "Please enter your email or phone number";
+        document.getElementById("emailError").after(errorDiv);
+      }
+      return;
+    } else {
+      if (document.getElementById("emailErrorBox")) {
+        document.getElementById("emailErrorBox").remove();
+      }
+    }
+    //password validation
+    if (!formData.user_password) {
+      if (!document.getElementById("passwordErrorBox")) {
+        const errorDiv = document.createElement("span");
+        errorDiv.className = "text-red-500 text-sm";
+        errorDiv.id = "passwordErrorBox";
+        errorDiv.textContent = "Please enter your password";
+        document.getElementById("passwordError").after(errorDiv);
+      }
+      return;
+    } else {
+      if (document.getElementById("passwordErrorBox")) {
+        document.getElementById("passwordErrorBox").remove();
+      }
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_HOST_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        //set token to cookies for session
+        const token = data.data.token;
+        //if checked cookies maxAge = 1h else 2h
+        const maxAge = checked ? 3600 : 7200;
+        setCookie("token", token, {
+          path: "/",
+          maxAge: maxAge,
+          secure: true,
+          sameSite: "Lax",
         });
-    
-        const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value,
-            }));
-        };
-        const handleChecked = () => {
-            setChecked(!checked);
-        }
-        //password toggle button icon change
-        const handlePasswordToggle = () => {
-            const passwordInput = document.getElementById("admin_password");
-            const passwordToggle = document.getElementById("passwordToggle");
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-            } else {
-                passwordInput.type = "password";
-                passwordToggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>`;
-            }
-        };
-    
-        const handleSubmit = async (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            // email validation
-            if (!formData.user_email_phone) {
-              if(!document.getElementById("emailErrorBox")){
-                const errorDiv = document.createElement("span");
-                errorDiv.className = "text-red-500 text-sm";
-                errorDiv.id = "emailErrorBox";
-                errorDiv.textContent = "Please enter your email or phone number";
-                document.getElementById("emailError").after(errorDiv);
-              }
-                return;
-            }else{
-              if(document.getElementById("emailErrorBox")){
-                document.getElementById("emailErrorBox").remove();
-              }
-            }
-            //password validation
-            if (!formData.user_password) {
-              if(!document.getElementById("passwordErrorBox")){
-                const errorDiv = document.createElement("span");
-                errorDiv.className = "text-red-500 text-sm";
-                errorDiv.id = "passwordErrorBox";
-                errorDiv.textContent = "Please enter your password";
-                document.getElementById("passwordError").after(errorDiv);
-              }
-                return;
-            }else{
-              if(document.getElementById("passwordErrorBox")){
-                document.getElementById("passwordErrorBox").remove();
-              }
-            }
-            
-            try {
-                const response = await fetch(`${process.env.REACT_APP_HOST_URL}/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                });
-    
-                const data = await response.json();
-    
-                if (response.ok) {
-                    //set token to cookies for session
-                    const token = data.data.token;
-                    //if checked cookies maxAge = 1h else 2h
-                    const maxAge = checked ? 3600 : 7200;
-                    setCookie("token", token, {
-                        path: "/",
-                        maxAge: maxAge,
-                        secure: true,
-                        sameSite: "Lax",
-                    });
-                    setNotice({
-                        type: "success",
-                        message: data.message
-                    });
-                    setTimeout(()=>{
-                        navigate('/admin/dashboard');
-                    },2000);
-                    }else{
-                      setNotice({
-                        type: data.status === 'unauthorize' || data.status === 'error' ? 'error' : 'warning', 
-                        message: data.message
-                      });
-                }    
-            } catch (error) {
-                console.error("Error logging in:", error);
-                setNotice({
-                    type: "error",
-                    message: error.message
-                });
-            } finally{
-                setIsLoading(false);
-            }
-        };
+        setNotice({
+          type: "success",
+          message: data.message
+        });
+        setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 2000);
+      } else {
+        setNotice({
+          type: data.status === 'unauthorize' || data.status === 'error' ? 'error' : 'warning',
+          message: data.message
+        });
+      }
+    } catch (error) {
+      setNotice({
+        type: "error",
+        message: error.message
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="w-full py-6 min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+          <div className="w-16 h-16 mx-auto rounded-full bg-orange-500 flex items-center justify-center text-white text-2xl font-bold">
             B
           </div>
           <NoticeComponents notice={notice} setNotice={setNotice} />
@@ -202,11 +201,11 @@ export default function AdminLogin() {
               />
             </div>
 
-            <button type="button" className="absolute right-5 top-[70%] -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300 password-toggle neu-toggle" onClick={handlePasswordToggle} id="passwordToggle" aria-label="Toggle password visibility">                                
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
+            <button type="button" className="absolute right-5 top-[70%] -translate-y-1/2 w-5 h-5 text-[#9499b7] transition-all duration-300 password-toggle neu-toggle" onClick={handlePasswordToggle} id="passwordToggle" aria-label="Toggle password visibility">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path></svg>
             </button>
           </div>
-          
+
           {/* Remember */}
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -225,16 +224,16 @@ export default function AdminLogin() {
           {/* Button */}
           <button
             type="submit"
-            className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+            className="w-full py-3 rounded-lg bg-orange-500 hover:bg-blue-700 text-white font-semibold transition"
             onClick={handleSubmit}
           > {
-            isLoading ? (
-                            <>
-                            <span className="spinner"></span>
-                            </>
-                        ) : (
-                            'Sign In'
-                        )}
+              isLoading ? (
+                <>
+                  <span className="spinner"></span>
+                </>
+              ) : (
+                'Sign In'
+              )}
           </button>
         </form>
 

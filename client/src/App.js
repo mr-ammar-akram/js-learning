@@ -3,17 +3,29 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UserProvider } from './pages/dashboard/global/UserContext';
 import RegisterForm from './pages/auth/RegisterForm';
 import Homepage from './pages/view/Homepage';
+import Blogs from './pages/view/Blogs';
+import SingleBlogPage from './pages/view/SingleBlogPage';
+import Memberships from './pages/view/Memberships';
 import LoginForm from './pages/auth/LoginForm';
 import AdminDashboard from "./pages/dashboard/admin_dashboard";
 import AdminLogin from "./pages/dashboard/admin_auth/admin_login";
 import AdminRegister from "./pages/dashboard/admin_auth/admin_register";
 import AdminProfile from "./pages/dashboard/AdminProfile";
+import AdminUsers from "./pages/dashboard/AdminUsers";
+import AdminPosts from "./pages/dashboard/AdminPosts";
+import AdminMembership from "./pages/dashboard/AdminMembership";
+import AdminMembershipPlans from "./pages/dashboard/AdminMembershipPlans";
+import AdminCategories from "./pages/dashboard/AdminCategories";
+import AdminTags from "./pages/dashboard/AdminTags";
+import Checkout from "./pages/dashboard/Checkout";
+import ThankYou from "./pages/dashboard/Thankyou";
+import VerifyOTP from "./pages/auth/verifyOTP";  
 
 import { CSpinner } from '@coreui/react'
 
 
 function App() {
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [adminExists, setAdminExists] = useState(false);
 
   useEffect(() => {
@@ -54,10 +66,22 @@ return (
       <UserProvider>
           <Routes>
             <Route path="/homepage" element={<Homepage />} />
+            <Route path="/posts" element={<Blogs />} />
+            <Route path="/post/:slug" element={<SingleBlogPage />} />
+            <Route path="/memberships" element={<Memberships />} />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/verify-otp" element={<VerifyOTP />} />  
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/profile/:user_id" element={<AdminProfile />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/posts" element={<AdminPosts />} />
+            <Route path="/admin/memberships" element={<AdminMembership />} />
+            <Route path="/admin/membership-plans" element={<AdminMembershipPlans />} />
+            <Route path="/admin/categories" element={<AdminCategories />} />
+            <Route path="/admin/tags" element={<AdminTags />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/thankyou" element={<ThankYou />} />
             <Route path="/ds-admin/register" element={<Navigate to="/ds-admin/login" />} />
             <Route path="/ds-admin/login" element={<AdminLogin />} />
           </Routes>
