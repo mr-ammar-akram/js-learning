@@ -127,7 +127,7 @@ class UserModel {
                     const profileResult = await client.query(profileQuery, profileValue);
                     const user = result.rows[0];
                     if(profileResult.rows.length !== 0){
-                        user.profile_image = profileResult.rows[0].file_url;
+                        user.profile_image = "http://localhost:5000/" + profileResult.rows[0].file_url;
                     }
                     delete user.user_password;
                     return { 
@@ -200,5 +200,57 @@ class UserModel {
             client.release();
         }
     }
+
+    static async deleteUserByID(id) {
+        const client = await pool.connectDb();
+        try {
+            const query = `DELETE FROM users WHERE id = $1`;
+            const values = [id];
+            const result = await client.query(query, values);
+            if (result.rows.length === 0) {
+                return { 
+                    success: true, 
+                    message: 'User deleted successfully',
+                    data: [] 
+                };
+            } else {
+                return { 
+                    success: false, 
+                    message: 'Users not found',
+                    data: [] 
+                };
+            }
+        } catch (err) {
+            return err;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async updateUserByID(id, userData){
+        const client = await pool.connectDb();
+        try{
+            const query = `UPDATE users SET full_name = $1, user_email = $2, user_name = $3, user_phone = $4, user_role = $5, is_verified = $6  WHERE id = $7 RETURNING *`;
+            const values = [userData.full_name, userData.user_email, userData.user_name, userData.user_phone, userData.user_role, userData.is_verified, id];
+            const result = await client.query(query, values);
+            if(result.rows.length !== 0){
+                return { 
+                    success: true, 
+                    message: 'User updated successfully',
+                    data: result.rows[0]
+                };  
+            }else{
+                return { 
+                    success: false, 
+                    message: 'Users not found',
+                    data: [] 
+                };  
+            }   
+        }catch(err){
+            return err;  
+        }finally{
+            client.release();
+        }   
+    }   
 }           
 module.exports = UserModel;    

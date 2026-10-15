@@ -2,6 +2,7 @@ import React from "react";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminHeader from "./components/AdminHeader";
 import AdminContent from "./components/AdminContent";
+import { useProfile } from "./global/UserContext";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -10,9 +11,12 @@ export default function AdminDashboard() {
     const navigate = useNavigate();
     const [token, setToken] = useState(null);
     const [userData, setUserData] = useState({});
+    const { getProfileImage, getProfileData, loading, error } = useProfile(); 
     
 
     useEffect(() => {
+
+    const checkToken = async () => {
         //get token value
         const token = document.cookie
         .split('; ')
@@ -21,7 +25,14 @@ export default function AdminDashboard() {
         if(token){
           const decoded = jwtDecode(token);
           if (decoded.user_role === "admin") { 
-            setUserData(decoded);
+            // user detail 
+            const user_id = decoded.id;
+            const profileImage = await getProfileImage(user_id);
+            if(profileImage){
+              setUserData(profileImage.data);
+            }else{
+              setUserData(decoded);
+            }
             setToken(token);
           }else{
               navigate('/homepage');
@@ -29,7 +40,9 @@ export default function AdminDashboard() {
         }else{
           navigate('/login');
         }
-    }, [navigate]);
+    }
+    checkToken();
+    }, [navigate, getProfileImage]);
   return (
     <div className="w-full flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -37,7 +50,7 @@ export default function AdminDashboard() {
       {/* Main */}
       <div className="flex-1">
         {/* Header */}
-        <AdminHeader userD={userData ? userData : {}}/>
+        <AdminHeader pageName="Dashboard" userD={userData ? userData : {}}/>
         <AdminContent />
       </div>
     </div>

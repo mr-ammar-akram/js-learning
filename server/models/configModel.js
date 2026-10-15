@@ -21,7 +21,7 @@ class ConfigModel {
                 RETURNING *;
             `;
             const values = [
-                userData.user_mail,
+                userData.user_email,
                 userData.user_name,
                 userData.full_name,
                 userData.user_role,

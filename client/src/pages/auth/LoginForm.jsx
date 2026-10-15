@@ -138,26 +138,41 @@ export default function LoginForm() {
                     navigate('/homepage');  
                 },2000);
                 }else{
-                    if(data.status === 'unauthorize'){
+                    if(data.status === 'not_verified'){
                         setNotice({
                             type: "error",
                             message: data.message
                         });
-                    }
-                    else if(data.status === 'error'){
-                        setNotice({
-                            type: "error",
-                            message: data.message
+                        setCookie("otp_token", data.data.otp_verification.data.expired_at, {
+                            path: "/",
+                            maxAge: 60 * 60 * 24, // 24 hours
+                            secure: true,
+                            sameSite: "Lax",
                         });
-                    }else if(data.status === 'internal_server_error'){
+                        setCookie("is_logged_in", "true", {
+                            path: "/",
+                            maxAge: 60 * 60 * 24 * 7,
+                            secure: true,
+                            sameSite: "Lax",
+                        });
+                        setTimeout(()=>{
+                            navigate('/verify-otp' , {
+                                state: {
+                                    user_id: data.data.id,
+                                    user_email: data.data.user_email,
+                                    user_name: data.data.user_name,
+                                    token: data.data.token ? data.data.token : ""
+                                }
+                            });   
+                        },2000);
+                    }else{
                         setNotice({
-                            type: "warning",
+                            type: data.status === 'unauthorize' || data.status === 'error' ? 'error' : 'warning', 
                             message: data.message
                         });
                     }
             }    
         } catch (error) {
-            console.error("Error logging in:", error);
             setNotice({
                 type: "error",
                 message: error.message

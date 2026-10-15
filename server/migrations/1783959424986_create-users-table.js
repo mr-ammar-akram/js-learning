@@ -13,7 +13,7 @@ export const up = (pgm) => {
     pgm.createTable('users', {
         id: { type: 'SERIAL', primaryKey: true },
         user_email: { type: 'VARCHAR(255)', notNull: true, unique: true },
-        user_name: { type: 'VARCHAR(255)', notNull: true },
+        user_name: { type: 'VARCHAR(255)', notNull: true, unique: true },
         full_name: { type: 'VARCHAR(255)', notNull: false },
         user_phone: { type: 'VARCHAR(15)', notNull: false },
         user_password: { type: 'VARCHAR(255)', notNull: true },

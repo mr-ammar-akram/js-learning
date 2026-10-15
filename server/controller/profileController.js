@@ -55,6 +55,7 @@ class ProfileController {
                 message: error.message
             });
         }
-    } 
+    }
+    
 }
 module.exports = ProfileController;
