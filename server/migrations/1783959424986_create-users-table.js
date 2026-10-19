@@ -20,6 +20,7 @@ export const up = (pgm) => {
         user_role: { type: 'VARCHAR(50)', notNull: false, default: 'user' },
         attachment_id: { type: 'INTEGER', notNull: false },
         is_verified: { type: 'BOOLEAN', default: false },
+        user_bio: { type: 'TEXT', notNull: false },
         created_at: { type: 'timestamptz', default: pgm.func('current_timestamp') },
         updated_at: { type: 'timestamptz', default: pgm.func('current_timestamp') }
     });

@@ -185,7 +185,34 @@ class PostController {
 
     static async getPostBySlug(req, res){
         try{
-            const result = await PostModel.getPostBySlug(req.params.slug);
+            const result = await PostModel.getPostBySlug(req.params.slug, req.body.userId);
+            if(result.success){
+                res.status(200).json({
+                    success: true,
+                    message: result.message,
+                    data: result.data
+                });
+            }else{
+                res.status(500).json({
+                    success: false,
+                    message: result.message,
+                    data: result.data
+                });
+            }
+        }catch(error){
+            res.status(500).json({
+                status_code: 500,
+                status: 'error',
+                message: error.message,
+                data: []
+            });
+        }
+    }
+
+    static async getAllPostsUser (req, res){
+        try{
+            const result = await PostModel.getAllPostsUser(req.body);
+            
             if(result.success){
                 res.status(200).json({
                     success: true,

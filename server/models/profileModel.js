@@ -63,7 +63,7 @@ class ProfileModel {
                 const value2 = [result.rows[0].attachment_id];
                 const result2 = await client.query(query2, value2);
                 if(result2.rows.length !== 0){
-                    result.rows[0].profile_image = result2.rows[0].file_url
+                    result.rows[0].profile_image = "http://localhost:5000/" + result2.rows[0].file_url
                     return {
                         success: true,
                         message: 'Image found successfully',
