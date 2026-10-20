@@ -1,17 +1,14 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { Header } from "./layout/Header";
 import { Footer } from "./layout/Footer";
 import { Sidebar } from "./layout/Sidebar";
-import { Users } from "lucide-react";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress'; 
 import Box from '@mui/material/Box'
 import { jwtDecode } from "jwt-decode";
 
 const MyAccount = () => {
     const [purchasedPlan, setPurchasedPlan] = useState([]);
-    const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

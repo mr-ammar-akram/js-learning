@@ -7,7 +7,7 @@ import DeleteComment from "./popups/DeleteComment";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone';
-import { Reply, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +17,9 @@ dayjs.extend(timezone);
 
 export default function AdminComments() {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
+    const [setToken] = useState(null);
     const [userData, setUserData] = useState({});
-    const { getProfileImage, getProfileData, loading, error } = useProfile();
+    const { getProfileImage } = useProfile();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
     const [deleteComment, setDeleteComment] = useState(false);
@@ -68,7 +68,7 @@ export default function AdminComments() {
             }
         }
         checkToken();
-    }, [navigate, refreshTrigger, getProfileImage]);
+    }, [navigate, refreshTrigger, getProfileImage, setToken]);
     const handleDelete = async (id) => {
         setCommentId(id);
         setDeleteComment(true);

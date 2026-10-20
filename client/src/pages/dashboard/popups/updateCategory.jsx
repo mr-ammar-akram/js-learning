@@ -5,7 +5,6 @@ import { Upload, X } from "lucide-react";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TextStyleKit } from "@tiptap/extension-text-style";
-import Typography from '@mui/material/Typography';
 
 
 export default function UpdateCategory({ cateID, onValueReturn, onSetNotice }) {

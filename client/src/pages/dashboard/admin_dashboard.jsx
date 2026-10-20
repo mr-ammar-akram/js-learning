@@ -9,9 +9,9 @@ import { jwtDecode } from "jwt-decode";
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
-    const [userData, setUserData] = useState({});
-    const { getProfileImage, getProfileData, loading, error } = useProfile(); 
+    const [ setToken] = useState(null);
+    const [ userData, setUserData] = useState({});
+    const { getProfileImage } = useProfile(); 
     
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export default function AdminDashboard() {
         }
     }
     checkToken();
-    }, [navigate, getProfileImage]);
+    }, [navigate, getProfileImage, setToken]);
   return (
     <div className="w-full flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -57,11 +57,11 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ title, value }) {
-  return (
-    <div className="bg-white rounded-xl shadow p-6">
-      <p className="text-gray-500">{title}</p>
-      <h2 className="text-3xl font-bold mt-2">{value}</h2>
-    </div>
-  );
-}
+// function StatCard({ title, value }) {
+//   return (
+//     <div className="bg-white rounded-xl shadow p-6">
+//       <p className="text-gray-500">{title}</p>
+//       <h2 className="text-3xl font-bold mt-2">{value}</h2>
+//     </div>
+//   );
+// }

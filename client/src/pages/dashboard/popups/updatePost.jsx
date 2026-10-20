@@ -15,7 +15,7 @@ export default function UpdatePost  ({onValueReturn, onSetNotice, postID}){
     const [previewImage, setPreviewImage] = useState(null);
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
-    const [posts, setPosts] = useState([]);
+    // const [posts, setPosts] = useState([]);
     const [postData, setPostData] = useState({
         title: "",
         slug: '',
@@ -26,10 +26,10 @@ export default function UpdatePost  ({onValueReturn, onSetNotice, postID}){
         author_id: "",
         image: "",
     });
-    const [notice, setNotice] = useState({
-        type: "",
-        message: ""
-    });
+    // const [notice, setNotice] = useState({
+    //     type: "",
+    //     message: ""
+    // });
     
     const editor = useEditor({
         extensions: [

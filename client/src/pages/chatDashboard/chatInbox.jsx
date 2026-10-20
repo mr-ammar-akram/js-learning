@@ -8,7 +8,6 @@ import Sidebar from "./layout/sidebar";
 import ChatArea from "./layout/chatArea";
 
 export default function ChatInbox() {
-    const [loader, setLoader] = useState(false);
     const [selectedChat, setSelectedChat] = useState({});
     const location = useLocation();
 
@@ -21,14 +20,6 @@ export default function ChatInbox() {
             });
         }
     }, [location.state]);
-
-    useEffect(() => {
-        setLoader(true);
-
-        // API call goes here
-
-        setLoader(false);
-    }, []);
 
     return (
         <main className="w-full h-screen flex flex-col overflow-hidden">

@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { User, ScrollText, List, CreditCard, Users, Tags, ChartNoAxesGantt, LogOut } from "lucide-react";
+import { User, ScrollText, List, CreditCard, Users, LogOut } from "lucide-react";
 
 export const Sidebar = () => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['token']);
+    const [cookies, removeCookie] = useCookies(['token']);
     const location = useLocation();
     useEffect(() => {
         const token = cookies.token;
         if (!token) {
             navigate('/login');
         }
-    }, [cookies.token]);
+    }, [cookies.token, navigate]);
     return (
         <>
             {/* should be sidebar account related tabs menu */}

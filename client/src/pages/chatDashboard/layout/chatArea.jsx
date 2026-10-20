@@ -361,7 +361,7 @@ const Sidebar = ({ width, height, receiverChat }) => {
         });
 
         return () => socket.disconnect();
-    }, [receiverChat]);
+    }, [receiverChat, currentUserId, receiverId, isGroup, token, groupId, navigate]);
 
     const handleSendMessage = (e) => {
         e.preventDefault();

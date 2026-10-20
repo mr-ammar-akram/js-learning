@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const OtpVerification = () => {
   const OTP_LENGTH = 6;
   const navigate = useNavigate();
-  const [cookie, setCookie, removeCookie] = useCookies();
+  const [setCookie, removeCookie] = useCookies();
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -64,7 +64,7 @@ const OtpVerification = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [expired]);
+  }, [expired, removeCookie]);
 
   useEffect(() => {
     inputRefs.current[0]?.focus();

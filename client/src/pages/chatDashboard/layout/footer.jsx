@@ -1,4 +1,3 @@
-import react from "react";
 import { Menu } from "lucide-react";
 const Footer = () => {
     return (

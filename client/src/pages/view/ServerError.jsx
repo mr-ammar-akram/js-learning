@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import ServerImage from "../assets/ServerError.png";
-import { ArrowRight, RotateCcw } from "lucide-react";
 
 
 
 export default function ServerError() {
-    const navigate = useNavigate();
     return (
         // Server Crashed Please try later and wait
 

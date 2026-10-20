@@ -27,10 +27,8 @@ export default function Author () {
             .split('; ')
             .find(row => row.startsWith(`token=`))
             ?.split('=')[1];
-        let CurrentUserId = null;
         if (token) {
             const decodedToken = jwtDecode(token);
-            CurrentUserId = decodedToken.id;
             setUserId(decodedToken.id);
         }
         setLoader(true);
