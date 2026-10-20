@@ -8,6 +8,10 @@ const postController = require('../controller/postController');
 const membershipController = require('../controller/membershipController');
 const planController = require('../controller/planController');
 const PaymentService = require('../payments/PaymentService');
+const likeController = require('../controller/likeController');
+const commentController = require('../controller/commentController');
+const followController = require('../controller/followController');
+const GroupChatController = require("../controller/groupChatController");
 
 const upload = require('../middleware/uploadAuth');
 const router = express.Router();
@@ -20,6 +24,9 @@ router.post('/admin/profile/image', profileController.getProfileImage);
 
 // Get All Users
 router.get('/admin/users', userController.getAllUsers);
+
+// Get All Users
+router.get('/users', userController.getNonAdminUsers);
 
 // Admin Exists or not
 router.get('/admin-exists', configController.checkAdminExist);
@@ -58,7 +65,7 @@ router.get('/admin/posts', postController.getPosts);
 router.post('/posts', postController.getAllPosts);
 
 // Get post by slug
-router.get('/post/:slug', postController.getPostBySlug);
+router.post('/post/:slug', postController.getPostBySlug);
 
 // Delete Post
 router.delete('/admin/post/delete/:id', postController.deletePost);
@@ -138,4 +145,52 @@ router.post('/payments/charge', PaymentService.charge);
 // Get Payment by Id
 router.get('/payment/order/:id', PaymentService.getPaymentById);
 
-module.exports = router;
+// Get All Purchased Plans
+router.get('/purchased_plan/:user_id', PaymentService.getPurchasedPlan);
+
+// Get All Posts for current user
+router.post('/my-posts', postController.getAllPostsUser);
+
+// Add like/Dislike 
+router.post('/likes', likeController.addLike);
+
+// Add Comment
+router.post('/comments', commentController.addComment);
+
+// Reply on Comment
+router.post('/comment-reply', commentController.replyComment);
+
+// Get All Comments Admin end
+router.get('/admin/comments', commentController.getAllComments);
+
+// Update Comment
+router.put('/comment-update', commentController.updateComment);
+
+//Follow/Unfollow
+router.post('/follow', followController.follow);
+
+// Get Author data public
+router.get('/author/:id', userController.getAuthor);
+
+// Create Group
+router.post('/create-group', GroupChatController.createGroup);
+
+// Add Members
+router.post('/add-members', GroupChatController.addMembers);
+
+// Get User Groups
+router.post('/user-groups', GroupChatController.getUserGroups);
+
+// Get Group Members
+router.post('/group-members', GroupChatController.getGroupMembers);
+
+// Leave Group
+router.post('/leave-group', GroupChatController.leaveGroup);
+
+// Delete Group
+router.post('/delete-group', GroupChatController.deleteGroup);
+
+// Get messages for a group
+router.get("/group-messages/:groupId", GroupChatController.getMessagesByGroupId);
+
+module.exports = router; 

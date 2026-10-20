@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel');
 const notificationController = require('../controller/notificationController');
+const PaymentModel = require('../models/paymentModel');
 const OtpModel = require('../models/otpModel');
 const jwt = require("jsonwebtoken");
 
@@ -18,6 +19,7 @@ class UserController {
                 // send email to user
                 const response = await notificationController.emailVerify(result.data.user_email, result.data.user_name, result.data.id);
                 //embed response in result.data
+                await PaymentModel.defaultPayment(result.data.id);
                 result.data.otp_verification = response;
                 return res.status(200).json({
                         status_code: 200,
@@ -217,6 +219,34 @@ class UserController {
         }
     }
 
+    // Get All Non-Admin Users
+    static async  getNonAdminUsers (req, res) {
+        try{
+        const response = await UserModel.getNonAdminUsers();
+            if(response.success){
+                return res.status(200).json({
+                    status_code: 200,
+                    status: 'success',
+                    message: response.message, 
+                    data: response.data
+                });
+            }else{
+                return res.status(400).json({
+                    status_code: 400,
+                    status: 'error',
+                    message: response.message, 
+                    data: []
+                })  
+            }
+        }catch(error){
+            res.status(500).json({
+                status_code: 500,
+                status: 'internal_server_error',
+                message: error.message
+            });
+        }
+    }
+
     static async deleteUser (req, res) {
         const { id } = req.params; 
         try{
@@ -249,6 +279,34 @@ class UserController {
         const { id } = req.params; 
         try{
             const response = await UserModel.updateUserByID(id, req.body);
+            if(response.success){
+                return res.status(200).json({
+                    status_code: 200,
+                    status: 'success',
+                    message: response.message, 
+                    data: response.data
+                });
+            }else{
+                return res.status(400).json({
+                    status_code: 400,
+                    status: 'error',
+                    message: response.message, 
+                    data: []
+                })  
+            }
+        }catch(error){
+            res.status(500).json({
+                status_code: 500,
+                status: 'internal_server_error',
+                message: error.message
+            });
+        }
+    }
+
+    static async getAuthor(req, res){
+        const { id } = req.params; 
+        try{
+            const response = await UserModel.getAuthorByID(id);
             if(response.success){
                 return res.status(200).json({
                     status_code: 200,

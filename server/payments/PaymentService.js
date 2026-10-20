@@ -110,6 +110,30 @@ static async getPaymentById(req, res) {
     }
 }
 
+// Get Purchased Plan by User ID
+static async getPurchasedPlan(req, res) {
+    try {
+        const result = await PaymentModel.getPurchasedPlan(req.params.user_id);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "No purchased plan found for this user.",
+                data: []
+            });
+        }
+        return res.json({
+            success: true,
+            data: result.data
+        });
+    } catch (error) {
+        console.error("Error fetching purchased plan:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve purchased plan.",
+            data: []
+        });
+    }
+}
 }
 
 module.exports = PaymentService;
