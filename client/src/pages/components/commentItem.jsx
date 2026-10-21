@@ -58,12 +58,12 @@ const CommentItem = ({
             >
             {isReplying ? 'Cancel' : 'Reply'}
             </button>
-              <span className={`flex items-center ${comment.user_reaction == 1 ? 'text-red-500' : 'text-gray-500'}`}>
-                <HeartIcon size={18}  fill={comment.user_reaction == 1 ? 'red' : 'white'}
+              <span className={`flex items-center ${comment.user_reaction === 1 ? 'text-red-500' : 'text-gray-500'}`}>
+                <HeartIcon size={18}  fill={comment.user_reaction === 1 ? 'red' : 'white'}
                   className="inline-block mx-2 cursor-pointer hover:text-red-400"
                   onClick={(e) => {
                     e.preventDefault();
-                    likeBlog(null, comment.id, 'comment', comment.user_reaction == 1 ? 0 : 1)
+                    likeBlog(null, comment.id, 'comment', comment.user_reaction === 1 ? 0 : 1)
                   }}
                   />
                 {comment.like_count}

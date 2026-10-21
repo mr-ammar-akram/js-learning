@@ -9,7 +9,7 @@ export default function LoginForm() {
 
     const navigate = useNavigate();
     const [isChecked, setIsChecked] = useState(true);
-    const [cookie, setCookie, removeCookie] = useCookies();
+    const [setCookie] = useCookies();
     const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState({
             type: "",
@@ -240,7 +240,7 @@ export default function LoginForm() {
                                 Remember me
                             </label>
                         </div>
-                        <a href="#" className="text-[#6c7293] text-[14px] font-medium no-underline transition-colors duration-300 hover:text-[#3d4468]">Forgot password?</a>
+                        <span className="text-[#6c7293] text-[14px] font-medium no-underline transition-colors duration-300 hover:text-[#3d4468]">Forgot password?</span>
                     </div>
                     <button type="submit" className="w-full text-[#3d4468] text-[16px] font-semibold cursor-pointer relative mb-7 bg-[#e0e5ec] border-0 rounded-[15px] px-8 py-[18px] overflow-hidden transition-all duration-300 shadow-[8px_8px_20px_rgb(190,195,207),-8px_-8px_20px_rgb(255,255,255)] hover:shadow-[4px_4px_10px_rgb(190,195,207),-4px_-4px_10px_rgb(255,255,255),4px_4px_10px_rgb(190,195,207)_inset,-4px_-4px_10px_rgb(255,255,255)_inset]">
                         {isLoading ? (

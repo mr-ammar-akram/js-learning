@@ -6,7 +6,7 @@ import NoticeComponents from "../components/noticComponents";
 
 export default function RegisterForm() {
     const navigate = useNavigate();
-    const [setCookie] = useCookies();
+    const [cookie, setCookie] = useCookies();
     const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState(
         {
@@ -26,11 +26,13 @@ export default function RegisterForm() {
 
     //redirect to homepage if already logged in
     useEffect(() => {
+        console.log(cookie);
         const token = document.cookie.split(';').find(row => row.startsWith('token='));
         if(token){
+
             navigate('/homepage');
         }
-    }, [navigate]);
+    }, [navigate, cookie]);
 
     // const handleChange = (e) => {
     //     const { name, value } = e.target;

@@ -271,7 +271,7 @@ export default function SingleBlogPage(){
                                     )}
                                     <div className="w-full h-full flex items-center justify-end gap-2">
                                         <span>{blog.like_count == null ? 0 : blog.like_count}</span>
-                                        <ThumbsUp onClick={() => onlikeBlog(blog.id, null, 'post', blog.user_reaction == 1 ? 0 : 1  )} className={`w-[20px] cursor-pointer ${blog.user_reaction === 1 ? "text-green-400" : "text-orange-400"} hover:text-gray-700 h-[20px]`} />
+                                        <ThumbsUp onClick={() => onlikeBlog(blog.id, null, 'post', blog.user_reaction === 1 ? 0 : 1  )} className={`w-[20px] cursor-pointer ${blog.user_reaction === 1 ? "text-green-400" : "text-orange-400"} hover:text-gray-700 h-[20px]`} />
                                         <span>{blog.dislike_count == null ? 0 : blog.dislike_count}</span>
                                         <ThumbsDown onClick={() => dislikeBlog(blog.id, null, 'post')} className={`w-[20px] cursor-pointer text-orange-400 ${blog.user_reaction === -1 ? "text-red-400" : "text-orange-400"} hover:text-gray-700 h-[20px]`} />
                                     </div>

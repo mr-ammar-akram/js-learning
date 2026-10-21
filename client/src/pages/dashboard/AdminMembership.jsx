@@ -174,17 +174,17 @@ export default function AdminMembership() {
                                     <TableCell className="post-description" sx={{ overflowWrap: "break-word" }} dangerouslySetInnerHTML={{ __html: membership.description }} />
                                     <TableCell>
                                         {plans.map((plan) => (
-                                            <span key={plan.id}>{membership.plan == plan.id ? plan.amount : ''}</span>
+                                            <span key={plan.id}>{membership.plan === plan.id ? plan.amount : ''}</span>
                                         ))}
                                     </TableCell>
                                     <TableCell>
                                         {plans.map((plan) => (
-                                            <span key={plan.id}>{membership.plan == plan.id ? plan.name : ''}</span>
+                                            <span key={plan.id}>{membership.plan === plan.id ? plan.name : ''}</span>
                                         ))}
                                     </TableCell>
 
                                     <TableCell>{
-                                        membership.duration == 1 ? 'One Time' : membership.duration == 30 ? 'Monthly' : membership.duration == 90 ? 'Quarterly' : membership.duration == 180 ? 'Half Yearly' : membership.duration == 365 ? 'Yearly' : ''
+                                        membership.duration === 1 ? 'One Time' : membership.duration === 30 ? 'Monthly' : membership.duration === 90 ? 'Quarterly' : membership.duration === 180 ? 'Half Yearly' : membership.duration === 365 ? 'Yearly' : ''
                                     }</TableCell>
                                     <TableCell sx={{ width: "10%" }}>
                                         <Pencil onClick={()=>handleUpdateMembership(membership.id)} className="inline-block mx-1 hover:text-blue-600 cursor-pointer" />
