@@ -1,6 +1,7 @@
 
 const pool = require('../models/db_learning'); 
 const bcrypt = require("bcrypt");
+const baseUrl = process.env.BASE_URL;
 
 class UserModel {
     
@@ -127,7 +128,7 @@ class UserModel {
                     const profileResult = await client.query(profileQuery, profileValue);
                     const user = result.rows[0];
                     if(profileResult.rows.length !== 0){
-                        user.profile_image = "http://localhost:5000/" + profileResult.rows[0].file_url;
+                        user.profile_image = baseUrl + profileResult.rows[0].file_url;
                     }
                     delete user.user_password;
                     return { 
@@ -212,7 +213,7 @@ class UserModel {
                     const profileValue = [user.attachment_id];
                     const profileResult = await client.query(profileQuery, profileValue);
                     if(profileResult.rows.length !== 0){
-                        user.user_image_url = "http://localhost:5000/" + profileResult.rows[0].file_url;
+                        user.user_image_url = baseUrl + profileResult.rows[0].file_url;
                     }
                     delete user.user_password;
                     delete user.user_role;
@@ -304,7 +305,7 @@ class UserModel {
                 const profileValue = [user.attachment_id];
                 const profileResult = await client.query(profileQuery, profileValue);
                 if(profileResult.rows.length !== 0){
-                    user.profile_image = "http://localhost:5000/" + profileResult.rows[0].file_url;
+                    user.profile_image = baseUrl + profileResult.rows[0].file_url;
                 }
                 delete user.user_password;
                 //get follower count
@@ -333,7 +334,7 @@ class UserModel {
                         const postAttachmentValue = [postsResult.rows[i].attachment_id];
                         const postAttachmentResult = await client.query(postAttachmentQuery, postAttachmentValue);
                         if(postAttachmentResult.rows.length !== 0){
-                            postsResult.rows[i].post_image_url = "http://localhost:5000/" + postAttachmentResult.rows[0].file_url;
+                            postsResult.rows[i].post_image_url = baseUrl + postAttachmentResult.rows[0].file_url;
                         }
                         const AuthorNameQuery = `SELECT * FROM users WHERE id = $1`;
                         const AuthorNameValue = [postsResult.rows[i].author_id];
@@ -346,7 +347,7 @@ class UserModel {
                         const authorProfileValue = [AuthorNameResult.rows[0].attachment_id];
                         const authorProfileResult = await client.query(authorProfileQuery, authorProfileValue);
                         if(authorProfileResult.rows.length !== 0){
-                            postsResult.rows[i].author_profile = "http://localhost:5000/" + authorProfileResult.rows[0].file_url;
+                            postsResult.rows[i].author_profile = baseUrl + authorProfileResult.rows[0].file_url;
                         }
                         //get author all Posts Like and dislike Count
                         const postsLikeCountQuery = `SELECT COUNT(*) FROM post_likes WHERE post_id = $1 and post_like = 1`;

@@ -1,4 +1,5 @@
 const pool = require('./db_learning');
+const baseUrl = process.env.BASE_URL;
 
 class CategoryModel {
     static async addCategory(categoryData, catImageId) {
@@ -54,7 +55,7 @@ class CategoryModel {
                 if (row.attachment_id) {
                     const result2 = await client.query(attachmentQuery, [row.attachment_id]);
                     // Check if attachment exists to prevent errors
-                    row.cat_image_url = "http://localhost:5000/" + result2.rows[0]?.file_url || null;
+                    row.cat_image_url = baseUrl + result2.rows[0]?.file_url || null;
                 } else {
                     row.cat_image_url = null;
                 }
@@ -146,7 +147,7 @@ class CategoryModel {
                 const Q2 = "SELECT * FROM attachments WHERE id = $1";
                 const V2 = [result.rows[0].attachment_id];
                 const result2 = await client.query(Q2, V2);
-                result.rows[0].cat_image_url = "http://localhost:5000/" + result2.rows[0].file_url;
+                result.rows[0].cat_image_url = baseUrl + result2.rows[0].file_url;
             }
             else{
                 result.rows[0].cat_image_url = null;

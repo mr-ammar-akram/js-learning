@@ -1,6 +1,7 @@
 const { json } = require('express');
 const pool = require('../models/db_learning');
 const UserModel = require('./userModel');
+const baseUrl = process.env.BASE_URL;
 
 class PostModel {
     static async addPostData(postData, postImageId) {
@@ -131,7 +132,7 @@ class PostModel {
                     data: []
                 }
             }
-            result.rows[0].post_image_url = "http://localhost:5000/" + imageResult.rows[0].file_url;
+            result.rows[0].post_image_url = baseUrl + imageResult.rows[0].file_url;
             result.rows[0].cat_id = result.rows[0].cat_id.split(',').map(Number);
             result.rows[0].tag_id = result.rows[0].tag_id.split(',').map(Number);
             
@@ -236,7 +237,7 @@ class PostModel {
                     [result.rows[i].attachment_id]
                 );
                 if(attachmentResult.rows.length !== 0){
-                    result.rows[i].post_image_url = "http://localhost:5000/" + attachmentResult.rows[0].file_url;
+                    result.rows[i].post_image_url = baseUrl + attachmentResult.rows[0].file_url;
                 }
                 //use usermodel to get user by id
                 const userResult = await UserModel.getUserByID(result.rows[i].author_id);
@@ -321,7 +322,7 @@ class PostModel {
                 [result.rows[0].attachment_id]
             );
             if(attachmentResult.rows.length !== 0){
-                result.rows[0].post_image_url = "http://localhost:5000/" + attachmentResult.rows[0].file_url;
+                result.rows[0].post_image_url = baseUrl + attachmentResult.rows[0].file_url;
             }
             //use usermodel to get user by id
             const userResult = await UserModel.getUserByID(result.rows[0].author_id);

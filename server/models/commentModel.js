@@ -1,4 +1,5 @@
 const pool = require('../models/db_learning');
+const baseUrl = process.env.BASE_URL;
 
 class CommentModel {
     static async getAllComments(){
@@ -183,7 +184,7 @@ class CommentModel {
                             u."user_email",
                             COUNT(m.id) FILTER (WHERE m.is_read = false AND m.receiver_id = $1) AS unread_message_count,
                             MAX(m.created_at) AS last_message_time,
-                            CONCAT('http://localhost:5000/', a.file_url) AS user_image_url,
+                            CONCAT(baseUrl, a.file_url) AS user_image_url,
                             (
                                 SELECT m2.message_text
                                 FROM messages m2

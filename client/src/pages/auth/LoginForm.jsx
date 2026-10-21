@@ -9,7 +9,7 @@ export default function LoginForm() {
 
     const navigate = useNavigate();
     const [isChecked, setIsChecked] = useState(true);
-    const [setCookie] = useCookies();
+    const [cookie, setCookie] = useCookies();
     const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState({
             type: "",
@@ -89,6 +89,7 @@ export default function LoginForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+        console.log(cookie);
         //make suree fields are not empty
         if (!formData.user_email_phone || !formData.user_password) {
             //Show error message on the emailPhoneError and error_box class with red color

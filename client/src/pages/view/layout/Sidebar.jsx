@@ -4,15 +4,17 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { User, ScrollText, List, CreditCard, Users, LogOut } from "lucide-react";
 
 export const Sidebar = () => {
+    // how can i use setCookie here
     const navigate = useNavigate();
-    const [cookies, removeCookie] = useCookies(['token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['token', 'login']);
     const location = useLocation();
     useEffect(() => {
         const token = cookies.token;
         if (!token) {
+            setCookie('login', false, { path: '/' });
             navigate('/login');
         }
-    }, [cookies.token, navigate]);
+    }, [cookies.token, navigate, setCookie]);
     return (
         <>
             {/* should be sidebar account related tabs menu */}

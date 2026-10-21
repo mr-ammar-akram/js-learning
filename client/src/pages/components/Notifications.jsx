@@ -90,7 +90,7 @@ export default function Notifications() {
                             key={notification.id}
                             
                         >
-                            <img src={"http://localhost:5000/" + notification.user_image_url} alt="" className="w-10 h-10 rounded-full" />
+                            <img src={notification.user_image_url} alt="" className="w-10 h-10 rounded-full" />
                             <div className="flex flex-col items-start gap-1">
                                 <h2 className="font-bold text-sm">{notification.sender_user_name}</h2>
                                 <p className="text-xs text-gray-500">{notification.message}</p>

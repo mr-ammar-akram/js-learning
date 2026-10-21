@@ -35,13 +35,14 @@ class NotificationModel {
 
     // Get notifications for user only unread
     static async getByUserId(userId) {
-        // add user image url
+        // add user image url with base uurl
+        const baseUrl = process.env.BASE_URL;
         const query = `
             SELECT
                 n.*,
                 u.id AS sender_user_id,
                 u.full_name AS sender_user_name,
-                a.file_url AS user_image_url,
+                concat('${baseUrl}', a.file_url) AS user_image_url,
                 m.is_read AS msg_is_read
 
             FROM notifications n

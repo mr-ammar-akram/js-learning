@@ -1,4 +1,5 @@
 const { pool } = require("./db_learning");
+const baseUrl = process.env.BASE_URL;
 
 class GroupChatModel {
 
@@ -198,7 +199,7 @@ class GroupChatModel {
             gm.message_text,
             gm.created_at,
             u."user_name" AS user_name,
-            CONCAT('http://localhost:5000/', a.file_url) AS "profile_image_url"
+            CONCAT(baseUrl, a.file_url) AS "profile_image_url"
         FROM group_messages gm
         JOIN users u ON u.id = gm.user_id
         LEFT JOIN attachments a ON a.id = u.attachment_id

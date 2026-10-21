@@ -1,5 +1,6 @@
 const { json } = require('express');
 const pool = require('../models/db_learning');
+const baseUrl = process.env.BASE_URL;
 
 class MembershipModel {
     static async addMembership(data, attachment_id) {
@@ -90,7 +91,7 @@ class MembershipModel {
                 if(imageResult.rows.length === 0){
                     result.rows[0].file_url = "";
                 }
-                result.rows[0].file_url = "http://localhost:5000/" + imageResult.rows[0].file_url;
+                result.rows[0].file_url = baseUrl + imageResult.rows[0].file_url;
             }
             return {
                 success: true,

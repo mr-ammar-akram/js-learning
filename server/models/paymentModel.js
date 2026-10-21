@@ -1,5 +1,6 @@
 
 const pool = require('../models/db_learning');
+const baseUrl = process.env.BASE_URL;
 
 class PaymentModel {
     static async defaultPayment(userId) {
@@ -153,7 +154,7 @@ static async getPurchasedPlan(user_id) {
             const userProfileValues = [UserResult.rows[0].attachment_id];
             const userProfileResult = await client.query(userProfileQuery, userProfileValues);
             if (userProfileResult.rows.length !== 0) {
-                result.rows[0].user.profile_image = "http://localhost:5000/" + userProfileResult.rows[0].file_url;
+                result.rows[0].user.profile_image = baseUrl + userProfileResult.rows[0].file_url;
             }else{
                 result.rows[0].user.profile_image = null;
             }
