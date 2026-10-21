@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Trash2 } from "lucide-react";
+import { Bell } from "lucide-react";
 
 import useNotifications
     from "../../Hooks/useNotification";
@@ -16,8 +16,7 @@ export default function Notifications() {
     const navigate = useNavigate();
     const {
         notifications,
-        loading,
-        refreshNotifications
+        loading
     } = useNotifications();
     useEffect(() => {
         const count = notifications.filter(n => !n.msg_is_read).length;

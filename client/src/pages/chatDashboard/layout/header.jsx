@@ -1,4 +1,3 @@
-import react from "react";
 import { MessageCircleIcon } from "lucide-react";
 const Header = () => {
     return (

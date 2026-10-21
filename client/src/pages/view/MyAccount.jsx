@@ -1,13 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import DummyImg from "../assets/dummy-post-square-1.jpg"
 import { Header } from "./layout/Header";
 import { Footer } from "./layout/Footer";
 import { Sidebar } from "./layout/Sidebar";
 import PopupModal from "../dashboard/global/popupModal";
 import NoticeComponents from "../components/noticComponents";
-import { Users, PenLine } from "lucide-react";
+import { PenLine } from "lucide-react";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box'
 import { jwtDecode } from "jwt-decode";

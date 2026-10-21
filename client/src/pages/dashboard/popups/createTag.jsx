@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TextEditor from "../../tiptap/TipTap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";

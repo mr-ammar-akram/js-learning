@@ -11,7 +11,7 @@ export default function AdminLogin() {
 
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
-  const [cookie, setCookie, removeCookie] = useCookies();
+  const [setCookie] = useCookies();
   const [isLoading, setIsLoading] = useState(false);
   const [notice, setNotice] = useState({
     type: "",
@@ -26,7 +26,7 @@ export default function AdminLogin() {
     if (token != null) {
       navigate("/admin/dashboard");
     }
-  }, []);
+  }, [navigate]);
 
   const [formData, setFormData] = useState({
     user_email_phone: "",

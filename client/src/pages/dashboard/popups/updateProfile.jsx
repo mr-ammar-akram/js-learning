@@ -23,7 +23,7 @@ export default function DeleteUser({ userId, onValueReturn, onSetNotice }) {
     const [userNameError, setUserNameError] = useState(false);
     const [userNameErrorMessage, setUserNameErrorMessage] = useState("");
     const [userRoleError, setUserRoleError] = useState(false);
-    const [userRoleErrorMessage, setUserRoleErrorMessage] = useState("");
+    // const [userRoleErrorMessage, setUserRoleErrorMessage] = useState("");
 
     useEffect(() => {
         const getUser = async () => {
@@ -77,10 +77,10 @@ export default function DeleteUser({ userId, onValueReturn, onSetNotice }) {
         // User role validation must be admin or user
         if (userData.user_role === "" || userData.user_role === null || !/^[a-zA-Z]+$/.test(userData.user_role)) {
             setUserRoleError(true);
-            setUserRoleErrorMessage("User role is required");
+            // setUserRoleErrorMessage("User role is required");
         } else {
             setUserRoleError(false);
-            setUserRoleErrorMessage("");
+            // setUserRoleErrorMessage("");
         }
     }, [userData]);
 

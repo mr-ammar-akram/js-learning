@@ -2,15 +2,15 @@ import { useReactToPrint } from "react-to-print";
 
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
-import { Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import { Table, TableRow, TableCell, TableBody } from "@mui/material";
 
 
 export default function ThankYou() {
 
     const location = useLocation();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { order_id } = location.state || {};
     const [order, setOrder] = useState(null);
     
@@ -34,9 +34,7 @@ export default function ThankYou() {
             // }
         }
         getUserData();
-    }, []);
-
-    console.log("order", order);
+    }, [order_id]);
     return (
         // along user and order daata
         // order details table also show

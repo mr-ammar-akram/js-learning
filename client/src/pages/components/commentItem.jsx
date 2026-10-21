@@ -7,7 +7,7 @@ import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
-const CommentItem = ({ 
+const CommentItem = ({
   comment, 
   blogId, 
   activeReplyId, 

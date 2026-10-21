@@ -20,14 +20,14 @@ dayjs.extend(timezone);
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
+    const [setToken] = useState(null);
     const [userData, setUserData] = useState({});
-    const { getProfileImage, getProfileData, loading, error } = useProfile();
+    const { getProfileImage } = useProfile();
     const [users, setUsers] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [addUser, setAddUser] = useState(false);
-    const [updateUser, setUpdateUser] = useState(false);
+    // const [updateUser, setUpdateUser] = useState(false);
     const [userId, setUserId] = useState("")
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [notice, setNotice] = useState(
@@ -71,14 +71,14 @@ export default function AdminDashboard() {
             }
         }
         checkToken();
-    }, [navigate, refreshTrigger, getProfileImage]);
+    }, [navigate, refreshTrigger, getProfileImage, setToken]);
 
     // 1. Callback function that expects a value from the child
     const handleChildData = (value) => {
         setShowPopup(value);
         setDeleteUser(value);
         setAddUser(value);
-        setUpdateUser(value);
+        // setUpdateUser(value);
         setRefreshTrigger(prev => prev + 1);
     };
     const handlePopupModal = () => {
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
     }
     const handleEdit = (userId) => {
         setUserId(userId);
-        setUpdateUser(true);
+        // setUpdateUser(true);
         setShowPopup(true);
     }
     return (
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
                                 setShowPopup(false);
                                 setAddUser(false);
                                 setDeleteUser(false);
-                                setUpdateUser(false);
+                                // setUpdateUser(false);
                             }
                         }
                         pWidth='590'

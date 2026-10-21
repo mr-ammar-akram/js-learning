@@ -5,7 +5,7 @@ import UpdatePlan from "./popups/updatePlan"
 import DeletePlan from "./popups/deletePlan"
 import { useProfile } from "./global/UserContext";
 import PopupModal from "./global/popupModal";
-import { Trash, Pencil, XCircle, CheckCircle } from "lucide-react";
+import { Trash, Pencil } from "lucide-react";
 import NoticeComponents from "../components/noticComponents";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
@@ -19,10 +19,10 @@ dayjs.extend(timezone);
 
 export default function AdminPlans() {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
+    const [setToken] = useState(null);
     const [userData, setUserData] = useState({});
     const [plans, setPlans] = useState([]);
-    const { getProfileImage, getProfileData, loading, error } = useProfile();
+    const { getProfileImage } = useProfile();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
     const [addPlan, setAddPlan] = useState(false);
@@ -72,7 +72,7 @@ export default function AdminPlans() {
             }
         }
         checkToken();
-    }, [navigate, refreshTrigger, getProfileImage]);
+    }, [navigate, refreshTrigger, getProfileImage, setToken]);
 
     // 1. Callback function that expects a value from the child
     const handleChildData = (value) => {

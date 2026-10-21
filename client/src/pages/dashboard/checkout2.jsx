@@ -4,27 +4,27 @@ import { jwtDecode } from "jwt-decode";
 import { useProfile } from "./global/UserContext";
 import { Header } from "../view/layout/Header";
 import { Footer } from "../view/layout/Footer";
-import { X } from "lucide-react";
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+// import { X } from "lucide-react";
+// import Box from '@mui/material/Box';
+// import TextField from '@mui/material/TextField';
+// import TextareaAutosize from '@mui/material/TextareaAutosize';
+// import Radio from '@mui/material/Radio';
+// import RadioGroup from '@mui/material/RadioGroup';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormControl from '@mui/material/FormControl';
+// import FormLabel from '@mui/material/FormLabel';
 
 
 export default function Checkout(){
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
+    const [setToken] = useState(null);
     const [userData, setUserData] = useState({});
     const { getProfileImage } = useProfile();
-    const [shippingMethod, setShippingMethod] = useState("");
+    // const [shippingMethod, setShippingMethod] = useState("");
     
-    const handleShippingMethodChange = (event) => {
-        setShippingMethod(event.target.value);
-    };
+    // const handleShippingMethodChange = (event) => {
+    //     setShippingMethod(event.target.value);
+    // };
 
     useEffect(() => {
         const checkToken = async () => {

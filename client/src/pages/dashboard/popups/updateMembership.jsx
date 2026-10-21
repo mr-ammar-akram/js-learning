@@ -64,7 +64,7 @@ export default function UpdateMembership  ({onValueReturn, onSetNotice, membersh
             const membershipResponse = await fetch(`${process.env.REACT_APP_HOST_URL}/admin/membership/${membershipID}`);
             const membershipData = await membershipResponse.json();
             if(plans.length > 0 && !isloaded){
-                plans.map(plan=> {
+                plans.map(plan => {
                     if(plan.id == membershipData.data.plan){
                         setAmount(plan.amount);
                     }

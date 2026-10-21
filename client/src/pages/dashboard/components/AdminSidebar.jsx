@@ -20,7 +20,7 @@ import {
 
 
 export default function AdminSidebar() {
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [removeCookie] = useCookies();
   const [openMenu, setOpenMenu] = useState("");
   const navigate = useNavigate();
   const location = useLocation();

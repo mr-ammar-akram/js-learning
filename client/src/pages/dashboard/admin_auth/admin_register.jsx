@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import { User, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import NoticeComponents from "../../components/noticComponents";
 
 
@@ -19,10 +18,9 @@ export default function AdminRegister() {
     action: ""
   });
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     if (name === "user_email") {
       const username = value.split("@")[0];
       setFormData((prev) => ({

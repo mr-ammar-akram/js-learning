@@ -1,8 +1,4 @@
-import { useEffect, useState } from "react";
-import TextEditor from "../../tiptap/TipTap";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { TextStyleKit } from "@tiptap/extension-text-style";
+import { useState } from "react";
 
 
 export default function CreatePlan  ({onValueReturn, onSetNotice}){

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Header } from "./layout/Header";
 import { Footer } from "./layout/Footer";
 import { Sidebar } from "./layout/Sidebar";
@@ -22,20 +22,18 @@ dayjs.extend(timezone);
 
 
 const MyAccount = () => {
-    const [purchasedPlan, setPurchasedPlan] = useState([]);
+    // const [purchasedPlan, setPurchasedPlan] = useState([]);
     const [userId, setUserId] = useState(null);
     const [loader, setLoader] = useState(true);
 
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
-    const [userData, setUserData] = useState({});
-    const { getProfileImage, getProfileData, loading, error } = useProfile();
+    const { getProfileImage } = useProfile();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
     const [addPost, setAddPost] = useState(false);
     const [updatePost, setUpdatePost] = useState(false);
     const [postId, setPostId] = useState("");
-    const [postTitle, setPostTitle] = useState("");
+    // const [postTitle, setPostTitle] = useState("");
     const [notice, setNotice] = useState(
         {
             type: "",
@@ -109,7 +107,8 @@ const MyAccount = () => {
             const data = await response.json();
             if(response.ok){
                 setUserId(id);
-                setPurchasedPlan(data.data);
+                // setPurchasedPlan(data.data);
+                console.log(data.data);
             }
         } catch (error) {
             console.error("Error fetching current membership:", error);

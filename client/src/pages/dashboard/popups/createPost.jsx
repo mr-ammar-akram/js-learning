@@ -13,7 +13,7 @@ export default function CreatePost({onValueReturn, onSetNotice, userId}){
     const [previewImage, setPreviewImage] = useState(null);
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
-    const [posts, setPosts] = useState([]);
+    // const [posts, setPosts] = useState([]);
     const [postData, setPostData] = useState({
         title: "",
         slug: '',

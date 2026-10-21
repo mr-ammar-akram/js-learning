@@ -9,7 +9,7 @@ import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import {ArrowLeft, ArrowRight, ThumbsUp, ThumbsDown, UserPlus } from 'lucide-react';
+import {ArrowLeft, ArrowRight, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { jwtDecode } from "jwt-decode";
 import { RiFacebookLine } from "react-icons/ri";
 import { VscTwitter } from "react-icons/vsc";
@@ -23,7 +23,7 @@ export default function SingleBlogPage(){
     const [isLiked, setIsLiked] = useState(false);
     const [isDisLiked, setIsDisLiked] = useState(0);
     const [comment, setComment] = useState("");
-    const [isFollowed, setIsFollowed] = useState(false);
+    // const [isFollowed, setIsFollowed] = useState(false);
     const [reply, setReply] = useState("");
     const [isRefresh, setIsRefresh] = useState(false);
     const { slug } = useParams();

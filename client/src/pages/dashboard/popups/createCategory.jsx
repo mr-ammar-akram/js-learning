@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Upload, X } from "lucide-react";
 import TextEditor from "../../tiptap/TipTap";
 import { useEditor } from "@tiptap/react";

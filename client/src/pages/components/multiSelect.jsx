@@ -52,7 +52,7 @@ export default function MultipleSelectCheckmarks({ catsData = [], tagsData = [],
         tagIDs: selectedTagIDs
       });
     }
-  }, [selectedCatIDs, selectedTagIDs]);
+  }, [selectedCatIDs, selectedTagIDs, selectedData]);
 
   const handleCatChange = (event) => {
     const { target: { value } } = event;

@@ -9,7 +9,7 @@ import UpdateCategory from "./popups/updateCategory"
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone';
-import { Trash, Pencil, XCircle, CheckCircle } from "lucide-react";
+import { Trash, Pencil } from "lucide-react";
 import { Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,9 +19,9 @@ dayjs.extend(timezone);
 
 export default function AdminCategories() {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
+    const [setToken] = useState(null);
     const [userData, setUserData] = useState({});
-    const { getProfileImage, getProfileData, loading, error } = useProfile();
+    const { getProfileImage } = useProfile();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
     const [addCategory, setAddCategory] = useState(false);
@@ -75,7 +75,7 @@ export default function AdminCategories() {
             }
         }
         checkToken();
-    }, [navigate, refreshTrigger, getProfileImage]);
+    }, [navigate, refreshTrigger, getProfileImage, setToken]);
     // 1. Callback function that expects a value from the child
     const handleChildData = (value) => {
         setShowPopup(value);

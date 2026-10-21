@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  LayoutDashboard,
-  BookOpen,
-  Users,
-  Tags,
-  ShoppingCart,
-  Star,
-  Settings,
-  LogOut,
-} from "lucide-react";
 
 
-export default function AdminContent() {
+
+export default function AdminContent() { 
             <main className="flex-1 p-8">
               {/* Welcome */}
               <div className="bg-white rounded-xl shadow p-6 mb-8">

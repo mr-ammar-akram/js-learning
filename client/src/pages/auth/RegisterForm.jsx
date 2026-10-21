@@ -6,7 +6,7 @@ import NoticeComponents from "../components/noticComponents";
 
 export default function RegisterForm() {
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies();
+    const [setCookie] = useCookies();
     const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState(
         {
@@ -143,7 +143,7 @@ export default function RegisterForm() {
             return;
         }
         else{
-            document.getElementById("passwordError").   style.opacity = "0";
+            document.getElementById("passwordError").style.opacity = "0";
             document.getElementById("passwordError").style.translate = "0";
         }
         if (!/^[a-zA-Z0-9]+$/.test(formData.userPassword)) {
@@ -194,7 +194,7 @@ export default function RegisterForm() {
         }else{
             document.getElementById("phoneError").style.opacity = "0";
             document.getElementById("phoneError").style.translate = "0";
-        } 
+        }
         try {
             const response = await fetch(`${process.env.REACT_APP_HOST_URL}/register`, {
                 method: 'POST',

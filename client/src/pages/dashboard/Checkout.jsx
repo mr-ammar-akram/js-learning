@@ -61,7 +61,7 @@ export default function Checkout() {
     const [token, setToken] = useState(null);
     const [userData, setUserData] = useState({});
 
-    const [shippingMethod, setShippingMethod] = useState("");
+    // const [shippingMethod, setShippingMethod] = useState("");
 
     /*
     |--------------------------------------------------------------------------
