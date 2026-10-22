@@ -78,7 +78,8 @@ return (
     <BrowserRouter>
       <UserProvider>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path="/" element={<Navigate to="/homepage" />} />
+            <Route path="/homepage" element={<Homepage />} />
             <Route path="/posts" element={<Blogs />} />
             <Route path="/post/:slug" element={<SingleBlogPage />} />
             <Route path="/memberships" element={<Memberships />} />
