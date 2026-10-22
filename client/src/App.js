@@ -78,7 +78,7 @@ return (
     <BrowserRouter>
       <UserProvider>
           <Routes>
-            <Route path="/homepage" element={<Homepage />} />
+            <Route path="/" element={<Homepage />} />
             <Route path="/posts" element={<Blogs />} />
             <Route path="/post/:slug" element={<SingleBlogPage />} />
             <Route path="/memberships" element={<Memberships />} />
