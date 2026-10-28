@@ -4,6 +4,8 @@ import { UserProvider } from './pages/dashboard/global/UserContext';
 import RegisterForm from './pages/auth/RegisterForm';
 import Homepage from './pages/view/Homepage';
 import Blogs from './pages/view/Blogs';
+import Services from './pages/view/Services';
+import ContactUs from './pages/view/ContactUs';
 import SingleBlogPage from './pages/view/SingleBlogPage';
 import Memberships from './pages/view/Memberships';
 import LoginForm from './pages/auth/LoginForm';
@@ -100,6 +102,8 @@ return (
             <Route path="/my-orders" element={<MyOrder />} />
             <Route path="/my-subscriptions" element={<MySubscription />} />
             <Route path="/my-posts" element={<MyPosts />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/admin/comments" element={<AdminComments />} />
             <Route path="/author/:authorId" element={<Author />} />
             <Route path="/chat-dashboard" element={<ChatInbox />} />
